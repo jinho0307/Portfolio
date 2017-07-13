@@ -1,0 +1,263 @@
+@CHARSET "UTF-8";
+
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+#container {
+	width: 100%;
+	height: 770px;
+	margin: 0px auto;
+	background-color: #E7E4F9;
+}
+
+#header {
+	height: 40px;
+	background-color: #9581BF;
+}
+
+#mdiv {
+	width: 1100px;
+	height: 500px;
+	margin: auto;
+	margin-top: 100px;
+	margin-bottom: 98px;
+	background-color: #E7E4F9;
+}
+
+#m-fdiv, #m-sdiv, #m-fdiv2, #m-sdiv2, #m-fdiv3, #m-sdiv3 {
+	display: inline-block;
+	float: left;
+	width: 500px;
+	height: 500px;
+	background-color: white;
+	-moz-box-shadow: 1px 1px #888888;
+	-webkit-box-shadow: 1px 1px #888888;
+	box-shadow: 1px 1px #888888;
+}
+
+#m-fdiv, #m-fdiv2, #m-fdiv3 {
+	margin-left: 40px;
+	margin-right: 20px;
+}
+
+#m-sdiv {
+	background: url("../images/Flogo.jpg") no-repeat;
+	background-size: cover;
+	background-position: center center;
+}
+
+#m-sdiv2 {
+	
+}
+
+#yakwan {
+	width : 100%; 
+	height : 340px;
+	resize: none;	
+}
+
+#m-f-ltable {
+	width: 400px;
+	height: 300px;
+	margin-top: 100px;
+	margin-left: 50px;
+}
+
+#enroll{
+	cursor: pointer;
+	margin-left: 23%;
+}
+
+#findPwd {
+	cursor: pointer;
+}
+
+#loginbtn {
+	height: 25px;
+	width: 90px;
+	font-size: 13px;
+	margin-left: 6px;
+}
+
+#tdd1 {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	size : 25;
+}
+
+#tdd2 {
+	padding-bottom: 3px;
+	size : 25;
+}
+
+#m-f-ctable {
+	width: 80%;
+	height: 500px;
+	margin-left: 50px;
+}
+
+.box {
+	height: 30px;
+	width: 280px;
+	font-size: 15px;
+}
+
+#LT {
+	width: 400px;
+	}
+	
+#m-s-enrolltable {
+      margin : 50px auto;
+      width : 350px;
+      height : 400px;
+      border-collapse : collapse;
+   }
+
+.tr1 input {
+      height : 25px;
+      font-size : 16px;
+   }
+
+.std input {
+      margin-left : 16.5px;
+   }
+   
+#rtr input {
+      margin : auto;
+      height : 40px;
+      width : 70px;
+      font-size : 16px;
+   }
+
+#footer {
+	height: 30px;
+	clear: both;
+	border: 1px solid #9581BF;
+	background-color: white;
+	text-align: center;
+}
+
+#c {
+	margin-top:7px;
+}
+
+#idt {
+	width:400px;
+	height:300px;
+	margin: 100px auto;
+	text-align: center;
+	border: 1px solid #9581BF;
+}
+
+#pwdt {
+	width:400px;
+	height:300px;
+	margin: 100px auto;
+	text-align: center;
+	border: 1px solid #9581BF;
+}
+
+@media screen and (max-width:500px) {
+	#container {
+		width: auto;
+	}
+	#m-fdiv, #m-sdiv {
+		display: block;
+		float: none;
+		width: auto;
+		margin: auto;
+		height: 330px;
+	}
+	#m-fdiv {
+		margin-top: 10px;
+		margin-bottom: 20px;
+	}
+	#m-fdiv2 {
+		width: 100%;
+		height: 350px;
+		margin-left: 0px;
+		margin-bottom: 20px;
+	}
+	#m-fdiv3 {
+		width: 100%;
+		height: 350px;
+		margin-left: 0px;
+		margin-bottom: 20px;
+	}
+	#yakwan {
+		height : 250px;
+	}
+	#m-sdiv2 {
+		width: 100%;
+		height: 300px;
+		margin-left: 0px;
+		margin-bottom: 20px;
+	}
+	#m-sdiv3 {
+		width: 100%;
+		height: 300px;
+		margin-left: 0px;
+		margin-bottom: 20px;
+	}
+	#m-f-ltable {
+		width: auto;
+		margin: 40px auto;
+	}
+	#m-f-ctable {
+		margin: 10px auto;
+		width: 350px;
+		height: 280px;
+	}
+	#mdiv {
+		width: auto;
+		margin-top: 0px;
+		margin-bottom: 0px;
+		height: auto;
+	}
+	#loginbtn {
+		width: 70px;
+	}
+	#tdd1 {
+		width: 200px;
+	}
+
+	#tdd2 {
+		width: 200px;
+	}
+	
+	#LT {
+		width: 200px;
+	}
+	
+	#enroll{
+		margin-left: 13%;
+	}
+	
+	#idt {
+		width:350px;
+		height:250px;
+		margin: 50px auto;
+	}
+	
+	#pwdt {
+		width:350px;
+		height:250px;
+		margin: 20px auto;
+	}
+	#m-s-enrolltable {
+      	margin-top : 10px;
+      	width : 380px;
+      	height : 280px;
+      	text-align:center;
+   }
+	
+	.tr1 input {
+      	font-size : 13px;
+   }
+	#rtr input {
+     	font-size : 13px;
+   }
+	
+}

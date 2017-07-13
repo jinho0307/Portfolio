@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>캔버스 연습</title>
+  <script type="text/javascript">
+   function draw_m(){
+   var m_canvas = document.getElementById("m");
+   var m_ctx = m_canvas.getContext("2d");
+   m_ctx.fillStyle="rgb(200,0,0)";
+   m_ctx.fillRect(10, 10, 100, 100);
+
+   }
+  </script>
+ </head>
+ <body>
+	<button onclick="draw_m()"> 도형그리기 </button>
+	<canvas id="m" width="500" height="300"></canvas>
+
+  
+ </body>
+</html>

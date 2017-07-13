@@ -1,0 +1,112 @@
+@CHARSET "UTF-8";
+
+
+#detailDiv{
+	width:600px;
+	min-height:300px;
+	height:auto;
+}
+#comLocation{
+	width:600px;
+	min-height:50px;
+	height:auto;
+	
+}
+#comForm{
+	width:600px;
+	min-height:100px;
+	height:auto;
+	margin:auto;
+}
+
+/* .labels{
+	font-size:11px;
+	position:relative;
+	float:right; 
+
+} */
+
+.buttons{
+
+float:right; 
+background:white;
+}
+
+#deleteBtn{
+	background:white;
+	outline:0;
+	border:0;
+	color:blue;
+}
+
+#comTable{
+		width:100%;
+	}
+	
+	#comTable > td{
+		text-align:left;
+	}
+	#content{
+	width: 650px;
+	}
+	#container {
+	width:1050px;
+	}
+	#adjustBtn{
+	position:relative; left:450px; width:50px; background:white;
+	}
+	#delBtn{
+	position:relative; left:450px; width:50px; background:white;
+	}
+	
+	
+@media screen and (max-width:500px) {
+	#top {
+		margin: auto;
+		both: clear;
+		width: 65%;
+	}
+	#t-l {
+		display: block;
+	}
+	#t-r {
+		display: block;
+	}
+	#container {
+		width: auto;
+	}
+	#left {
+		display: none;
+		float: none;
+		width: auto;
+	}
+	#content {
+		overflow: auto;
+		float: none;
+		width: auto;
+		margin: margin: auto 10px 10px;
+	}
+	#right {
+		display: none;
+		float: none;
+		width: auto;
+	}
+	
+	#detailDiv {
+		width : 100%;
+		margin :  auto;
+	}
+	
+	#comment {
+		width : 30%;
+	}
+	.labels {
+		margin: auto;
+	}
+	
+	#comLocation {
+	 width :  100%;
+	}
+	
+
+}

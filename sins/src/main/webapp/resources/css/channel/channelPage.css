@@ -1,0 +1,435 @@
+@CHARSET "UTF-8";
+
+.commentList{
+	padding : 0;
+}
+
+.flip-container {
+   perspective: 598px;
+   border:1px solid rgba(0,0,0,0) !important;
+   width: 598px;
+    height: 150px;
+}
+
+.front{
+  z-index:2;
+  transform: rotateY(0deg);
+}
+	
+.back {
+    transform: rotateY(180deg);
+}
+
+.flipper {
+   /* 하위요소에 3D 좌표값 지정 */
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.front, .back{
+  position: absolute;
+  backface-visibility:hidden;
+  width: 600px;
+  height: 150px;
+}
+
+.content2 {
+	width: 100%;
+	height: 150px;
+	background-color: white;
+}
+
+#file {
+	margin-left: 10px;
+	width : 180px;
+}
+	
+/* 팝업 */
+#mask {
+	position: fixed;
+	width:100%;
+	height:100%;
+	z-index: 9000;
+	background-color: #000;
+	display: none;
+}
+
+/* 팝업으로 뜨는 윈도우 css  */
+#updateChannel {
+	text-align: center;
+	margin: 35px auto;
+}
+
+#updateContent {
+	height: 25px;
+}
+
+#updateBtnArea {
+	text-align: center;
+}
+
+#deleteChannelArea{
+	text-align: center;
+	margin: 45px auto;
+	font-size : 20px;
+}
+
+#deleteBtnArea{
+	text-align: center;
+}
+
+a:link, a:visited { text-decoration: none; color: #000000; }
+a:hover { text-decoration: none; color: #0080ff; }
+
+ul, li {list-style:none; margin:0; padding:10px;}
+/* 게시글 목록  */
+.writeList {
+	margin-top : 10px;
+	width: 100%;
+	min-height : 150px;
+	background-color: white;
+}
+
+.writeList .writerInfo {
+	width: 100%;
+}
+
+.writeList .writerPhoto {
+	width: 15%;
+}
+
+.writeList .writerName {
+	font-size: 15px;
+}
+
+.writeList .writeDate {
+	font-size: 12px;
+}
+
+.contentContainer {
+	height : 104px;
+}
+
+.buttonContainer {
+	background: #ededed;
+}
+
+
+#chanFollow {
+	margin-left: 7px;
+	margin-top: 100px;
+	position: relative;
+	float: left;
+	width: 100px;
+	height: 120px;
+	border: 1px solid #9581BF;
+}
+
+.front, .back {
+	width: 100%;
+	height: 150px;
+	background-color: white;
+}
+
+#backForm {
+	width : 70%;
+	height : 100px;
+	margin : 10px auto;
+	text-align: center;
+}
+
+#channel_name {
+	width : 70%;
+	margin-bottom : 2px;
+}
+
+#channel_info {
+	width : 70%;
+	margin-bottom : 2px;
+}
+
+#signalImageArea {
+	margin: 3px auto;
+	padding : 10px;
+	width: 95%;
+	height: 80%;
+	position: relative;
+	
+}
+#signalImageCalled{
+	position: relative;
+	float: right;
+	width: 120px;
+	height: 80px;
+	border: 1px solid #9581BF;
+}
+#writeArticle {
+	margin-top: 10px;
+	width: 100%;
+	height: 150px;
+}
+
+#mypageform3 {
+	display: none;
+}
+
+.score_textarea {
+	position: relative;
+	width: 100%;
+	border-left: 1px solid #dedede;box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	background-color:white;
+}
+
+.score_textarea textarea {
+	width: 80%;
+	height: 50px;
+	border: none;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	font-size: 18px;
+	color: #666
+}
+
+.score_textarea .btn_entry {
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	display: block;
+	width: 60px;
+	height: 50px;
+	background: #9581BF;
+	font-size: 18px;
+	font-weight: bold;
+	color: white;
+	text-align: center;
+	line-height: 50px;
+	border: 0;
+	border-radius: 15px 15px 15px 15px;
+	outline: none;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+
+#spot3 {
+	width: 10%;
+	height : 40px;
+	position: realative;
+	top: 0;
+	z-index: 101;
+	float: left;
+}
+
+#spot3 {
+	margin-left : 20%;
+	width: 80%;
+	position: absolute;
+	top: 0;
+	margin : 5px 10%;
+	z-index: 101;
+	float: left;
+}
+
+.box {
+	-moz-box-shadow: 1px 1px 1px #888888;
+	box-shadow: 1px 1px 1px #888888;
+}
+
+body {
+	width: 100%;
+	background-color: #E7E4F9;
+}
+
+#container {
+	width: 1000px;
+	min-height: 500px;
+	margin: 0px auto;
+	background-color: #E7E4F9;
+}
+
+#header {
+	width: 100%;
+	height: 40px;
+	margin-top: 0px;
+	margin-bottom: 10px;
+	background-color: #9581BF;
+	text-align: center;
+}
+
+#t-l {
+	margin-top: 5px;
+	width: 30px;
+	height: 30px;
+	float: left;
+	margin-left: 10px;
+	display: none;
+	background-image: url("../../images/min-button.jpg");
+	cursor: pointer;
+}
+
+#top {
+	margin: auto;
+	width: 80%;
+	height: 30px;
+	padding: 5px;
+}
+
+#t-r {
+	margin-top: 5px;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	float: left;
+	margin-right: 10px;
+	right: 10px;
+	display: none;
+	background-image: url("../../images/min-button.jpg");
+	cursor: pointer;
+}
+
+#left {
+	width: 130px;
+	min-height: 500px;
+	margin-left: 20px;
+	float: left;
+	background-color: white;
+}
+
+#channelInfo {
+	width : 180px;
+	height : 200px;
+	border : 1px solid #E7E4F9;
+	margin : 10px auto 10px;
+}
+
+#channelFoll{
+	width : 180px;
+	height : 250px;
+	border : 1px solid #E7E4F9;
+	margin : 0 auto 10px;
+}
+
+#content {
+	width: 600px;
+	min-height: 500px;
+	margin-left: 13px;
+	float: left;
+	overflow: auto;
+}
+
+#right {
+	width: 200px;
+	height: 500px;
+	margin-right: 20px;
+	float: right;
+	background-color: white;
+}
+
+#footer {
+	width: 100%;
+	height: 30px;
+	clear: both;
+	border: 1px solid #9581BF;
+	background-color: white;
+	position:fixed;
+	bottom : 0px;
+}
+
+@media screen and (max-width:900px) {
+	#top {
+		width: 80%;
+		right: 70px;
+		position: absolute;
+	}
+	#t-r {
+		display: block;
+	}
+	#right {
+		display: none;
+		float: none;
+		width: auto;
+	}
+}
+
+#overlay_t {
+	background-color: #000;
+	bottom: 0;
+	left: 0;
+	opacity: 0.0;
+	filter: alpha(opacity = 50); /* IE7 & 8 */
+	position: fixed;
+	right: 0;
+	top: 0;
+	z-index: 99;
+	display: none;
+}
+
+#spot1 {
+	width: 200px;
+	min-height: 300px;
+	background-color: white;
+	position: absolute;
+	left: 10px;
+	top: 40px;
+	display: none;
+	z-index: 100;
+	border: 1px solid #9581BF;
+}
+
+#spot2 {
+	width: 200px;
+	min-height: 300px;
+	background-color: white;
+	position: absolute;
+	right: 10px;
+	top: 40px;
+	display: none;
+	z-index: 100;
+	border: 1px solid #9581BF;
+}
+
+@media screen and (max-width:500px) {
+	#top {
+		margin: auto;
+		both: clear;
+		width: 65%;
+	}
+	#t-l {
+		display: block;
+	}
+	#t-r {
+		display: block;
+	}
+	#container {
+		width: auto;
+	}
+	#left {
+		display: none;
+		float: none;
+		width: auto;
+	}
+	#content {
+		overflow: hidden;
+		float: none;
+		width: auto;
+		margin: auto 5px 10px 10px;
+	}
+	#right {
+		display: none;
+		float: none;
+		width: auto;
+	}
+	.flip-container {
+   perspective: 100%;
+	}
+
+	.flip-container, .front, .back {
+    width: 100%;
+	}
+}

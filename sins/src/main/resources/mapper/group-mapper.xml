@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="group">
+	<resultMap type="GroupVO" id="resultGroup">
+		<id property="groupNo" column="GROUP_NO"/>
+		<result property="groupName" column="GROUP_NAME"/>
+		<result property="groupInfo" column="GROUP_INFO"/>
+		<result property="keyword" column="KEYWORD"/>
+		<result property="groupLike" column="GROUP_LIKE"/>
+		<result property="filepath" column="FILEPATH"/>
+		<result property="category1" column="CATEGORY_NAME"/>
+		<result property="createDate" column="CREATE_DATE"/>
+		<result property="classify" column="CLASSIFY"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="memberCount" column="MEMBER_COUNT"/>
+		<result property="deleteYN" column="DELETE_YN"/>
+	</resultMap>
+	
+	<!-- Group -->
+	<select id="selectGroupList" resultType="GroupVO" resultMap="resultGroup">
+		SELECT GROUP_NO, GROUP_NAME, KEYWORD, GROUP_LIKE, FILEPATH, CREATE_DATE, 
+            L.CLASSIFY, L.USER_ID, L.DELETE_YN, CATEGORY_NAME, COUNT(GROUP_NO) MEMBER_COUNT
+		FROM GROUP_LIST L
+		JOIN CATEGORY1 ON CATEGORY1 = CATEGORY_NAME
+		JOIN GROUP_MEMBER USING (GROUP_NO)
+		WHERE DELETE_YN = 'N'  AND GROUP_ACCEPT = 'Y'
+		GROUP BY GROUP_NO, GROUP_NAME, KEYWORD, GROUP_LIKE, FILEPATH, CREATE_DATE, 
+		                L.CLASSIFY, L.USER_ID, L.DELETE_YN, CATEGORY_NAME
+		ORDER BY MEMBER_COUNT DESC
+		<!-- SELECT * FROM GROUP_LIST JOIN CATEGORY1 ON CATEGORY1 = CATEGORY1_NO WHERE DELETE_YN = 'N' -->
+	</select>
+	<select id="selectGroup" parameterType="int" resultType="GroupVO" resultMap="resultGroup">
+		SELECT GROUP_NO, GROUP_NAME, GROUP_INFO, KEYWORD, GROUP_LIKE, FILEPATH, CREATE_DATE, 
+            L.CLASSIFY, L.USER_ID, L.DELETE_YN, CATEGORY_NAME, USER_NAME, COUNT(GROUP_NO) MEMBER_COUNT
+		FROM GROUP_LIST L
+		JOIN CATEGORY1 ON CATEGORY1 = CATEGORY_NAME
+		JOIN GROUP_MEMBER USING (GROUP_NO)
+        JOIN MEMBER ON (L.USER_ID = MEMBER.USER_ID)
+		WHERE DELETE_YN = 'N' AND GROUP_NO = #{groupNo}
+		GROUP BY GROUP_NO, GROUP_NAME, GROUP_INFO, KEYWORD, GROUP_LIKE, FILEPATH, CREATE_DATE, 
+		                L.CLASSIFY, L.USER_ID, L.DELETE_YN, CATEGORY_NAME, USER_NAME
+		ORDER BY MEMBER_COUNT DESC
+	</select>
+	<insert id="insertGroup" parameterType="GroupVO">
+		INSERT INTO GROUP_LIST VALUES 
+		(YOON_SEQ_GROUP.NEXTVAL, #{groupName}, #{groupInfo}, #{keyword, jdbcType=VARCHAR}, 0, #{filepath, jdbcType=VARCHAR}, 
+		#{category1}, DEFAULT, 'GROUP_LIST', #{userId}, DEFAULT)
+		<!-- 
+		INSERT INTO GROUP_MEMBER VALUES
+		(YOON_SEQ_GRADE.CURRVAL, '${userId}', 0, 'GROUP_LIST', 'Y') -->
+	</insert>	
+	<update id="updateGroup" parameterType="GroupVO">
+		UPDATE GROUP_LIST
+		SET GROUP_NAME = #{groupName}, GROUP_INFO = #{groupInfo}, FILEPATH=#{filepath, jdbcType=VARCHAR} 
+		WHERE GROUP_NO = #{groupNo}
+	</update>	
+	<update id="deleteGroup" parameterType="int">
+		UPDATE GROUP_LIST
+		SET GROUP_NAME = NULL, DELETE_YN = 'Y'
+		WHERE GROUP_NO = #{groupNo}
+	</update>
+	
+	<!-- GroupLike -->
+	<resultMap type="GroupLikeVO" id="resultGroupLike">
+		<id property="writeNo" column="WRITE_NO"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="classify" column="CLASSIFY"/>
+		<result property="groupNo" column="GROUP_NO"/>		
+	</resultMap>
+	
+	<select id="groupLikeList" parameterType="GroupLikeVO" resultType="GroupLikeVO" resultMap="resultGroupLike">
+		SELECT * FROM GROUP_LIKE WHERE GROUP_NO = #{groupNo} AND USER_ID = #{userId}
+	</select>
+	<insert id="groupLike" parameterType="GroupLikeVO">
+		INSERT INTO GROUP_LIKE VALUES (#{writeNo}, #{userId}, 'GROUP_LIKE', #{groupNo})
+	</insert>
+	<delete id="groupUnlike" parameterType="GroupLikeVO">
+		DELETE FROM GROUP_LIKE 
+		WHERE WRITE_NO = #{writeNo} AND USER_ID = #{userId}
+	</delete>
+	
+	<!-- GroupWrite -->
+	<resultMap type="GroupWriteVO" id="resultGroupWrite">
+		<id property="writeNo" column="WRITE_NO"/>
+		<result property="groupNo" column="GROUP_NO"/>
+		<result property="content" column="CONTENT"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="userProfile" column="USER_PROFILE"/>
+		<result property="filepath" column="FILEPATH"/>
+		<result property="writeLike" column="WRITE_LIKE"/>
+		<result property="writeDate" column="WRITE_DATE"/>
+		<result property="groupNoBak" column="GROUP_NO_BAK"/>
+		<result property="groupNameBak" column="GROUP_NAME_BAK"/>
+		<result property="userIdBak" column="USER_ID_BAK"/>
+		<result property="classify" column="CLASSIFY"/>
+		<result property="report" column="REPORT"/>
+		<result property="deleteYN" column="DELETE_YN"/>
+	</resultMap>
+	
+	<select id="selectGroupWriteList" parameterType="int" resultType="GroupWriteVO" resultMap="resultGroupWrite">
+		SELECT * FROM GROUP_MAIN JOIN MEMBER USING(USER_ID)
+		WHERE DELETE_YN = 'N' AND GROUP_NO = #{groupNo} ORDER BY WRITE_NO DESC
+	</select>
+	<insert id="insertGroupWrite" parameterType="GroupWriteVO">
+		INSERT INTO GROUP_MAIN VALUES (
+			#{groupNo}, YOON_SEQ_WRITE.NEXTVAL, #{content}, #{userId}, #{filepath, jdbcType=VARCHAR}, 0, 
+			DEFAULT, #{groupNo}, (SELECT GROUP_NAME
+									FROM GROUP_LIST
+									WHERE GROUP_NO = #{groupNo}), #{userId}, 'GROUP_MAIN', 0, DEFAULT
+		)
+	</insert>
+	<update id="updateGroupWrite" parameterType="GroupWriteVO">
+		UPDATE GROUP_MAIN SET CONTENT = #{content}, FILEPATH = #{filepath}
+		WHERE WRITE_NO = #{writeNo}
+	</update>
+	<update id="deleteGroupWrite" parameterType="int">
+		UPDATE GROUP_MAIN SET DELETE_YN = 'Y' WHERE WRITE_NO = #{writeNo}
+	</update>
+	
+	<!-- GroupMember -->
+	<resultMap type="GroupMemberVO" id="resultGroupMember">
+		<id property="groupNo" column="GROUP_NO"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="userProfile" column="USER_PROFILE"/>
+		<result property="grade" column="GRADE"/>
+		<result property="classify" column="CLASSIFY"/>
+		<result property="groupAccept" column="GROUP_ACCEPT"/>
+	</resultMap>
+	
+	<select id="selectGroupMemberList" parameterType="int" resultType="GroupMemberVO" resultMap="resultGroupMember">
+		SELECT * FROM GROUP_MEMBER JOIN MEMBER USING (USER_ID) 
+		WHERE GROUP_NO = #{groupNo} ORDER BY GRADE, USER_NAME
+	</select>
+	<insert id="insertGroupAdmin" parameterType="GroupVO">
+		INSERT INTO GROUP_MEMBER VALUES (YOON_SEQ_GROUP.CURRVAL, '${userId}', 0, 'GROUP_MEMBER', 'Y')
+	</insert>
+	<insert id="requestGroupMember" parameterType="GroupMemberVO">
+		INSERT INTO GROUP_MEMBER VALUES (#{groupNo}, #{userId}, 2, 'GROUP_MEMBER', 'N')
+	</insert>
+	<update id="agreeGroupMember" parameterType="GroupMemberVO">
+		UPDATE GROUP_MEMBER
+		SET GROUP_ACCEPT = 'Y'
+		WHERE GROUP_NO = #{groupNo} AND USER_ID = #{userId}
+	</update>
+	<update id="updateGroupMember">
+		UPDATE GROUP_MEMBER
+		SET GRADE = ${grade}
+		WHERE GROUP_NO = ${groupNo} AND USER_ID = ${userId}
+	</update>	
+	<delete id="deleteGroupMember">
+		DELETE FROM GROUP_MEMBER WHERE GROUP_NO = #{groupNo} AND USER_ID = #{userId}
+	</delete>	
+
+	<!-- GroupComment -->
+	<resultMap type="GroupCommentVO" id="resultGroupComment">
+		<id property="commentNo" column="COMMENT_NO"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="userProfile" column="USER_PROFILE"/>
+		<result property="content" column="CONTENT"/>
+		<result property="commentDate" column="COMMENT_DATE"/>
+		<result property="lev" column="LEV"/>
+		<result property="ref" column="REF"/>
+		<result property="photopath" column="PHOTO_PATH"/>
+		<result property="backupId" column="BACKUP_ID"/>
+		<result property="writeNo" column="WRITE_NO"/>
+		<result property="classify" column="CLASSIFY"/>
+		<result property="report" column="REPORT"/>
+		<result property="deleteYN" column="DELETE_YN"/>
+	</resultMap>
+	
+	<select id="selectGroupCommentList" parameterType="GroupCommentVO" resultType="GroupCommentVO" resultMap="resultGroupComment">
+		SELECT COMMENT_NO, USER_ID, USER_NAME, CONTENT, COMMENT_DATE, USER_PROFILE "PHOTO_PATH"
+		FROM GROUP_COMMENT 
+		JOIN MEMBER USING(USER_ID)
+		WHERE DELETE_YN = 'N' AND WRITE_NO = #{writeNo} AND LEV = 0
+		ORDER BY COMMENT_NO DESC
+	</select>
+	<insert id="insertGroupComment" parameterType="GroupCommentVO">
+		INSERT INTO GROUP_COMMENT VALUES (
+			YOON_SEQ_COMMENT.NEXTVAL, #{userId}, #{content}, SYSDATE, 0, 0, 
+			#{photopath, jdbcType=VARCHAR}, #{userId}, #{writeNo}, 'GROUP_COMMENT', 0, DEFAULT
+		) 
+	</insert>
+	<update id="updateGroupComment" parameterType="GroupCommentVO">
+		UPDATE GROUP_COMMENT SET CONTENT = ${content}, PHOTO_PATH = ${photopath}
+	</update>		
+	<update id="deleteGroupComment" parameterType="GroupCommentVO">
+		UPDATE GROUP_COMMENT SET DELETE_YN = 'Y' WHERE COMMENT_NO = #{commentNo}
+	</update>
+	<select id="countGroupComment" parameterType="int">
+		SELECT COUNT(*) FROM GROUP_COMMENT WHERE DELETE_YN = 'N' AND WRITE_NO = ${writeNo}
+	</select>	
+	
+	<!-- 답글 -->
+	<select id="selectGroupCommentList2" parameterType="GroupCommentVO" resultType="GroupCommentVO" resultMap="resultGroupComment">
+		SELECT COMMENT_NO, USER_ID, USER_NAME, CONTENT, COMMENT_DATE, PHOTO_PATH
+		FROM GROUP_COMMENT 
+		JOIN MEMBER USING(USER_ID)
+		WHERE DELETE_YN = 'N' AND REF = #{ref} AND LEV = 1
+		ORDER BY COMMENT_NO DESC
+	</select>
+	<insert id="insertGroupComment2" parameterType="GroupCommentVO">
+		INSERT INTO GROUP_COMMENT VALUES (
+			YOON_SEQ_COMMENT.NEXTVAL, #{userId}, #{content}, SYSDATE, 1, #{ref}, 
+			#{photopath, jdbcType=VARCHAR}, #{userId}, #{writeNo}, 'GROUP_COMMENT', 0, DEFAULT
+		)
+	</insert>
+	
+	<!-- 원석 -->
+	<select id="groupWrite" parameterType="FireVO" resultMap="resultGroupWrite">
+      SELECT *
+      FROM GROUP_MAIN
+      WHERE WRITE_NO = #{fireNo}
+   </select>
+   
+   <select id="groupComment" parameterType="FireVO" resultMap="resultGroupComment">
+      SELECT COMMENT_NO, USER_ID, CONTENT, COMMENT_DATE, LEV, REF, PHOTO_PATH, WRITE_NO, CLASSIFY, DELETE_YN
+      FROM GROUP_COMMENT
+      WHERE COMMENT_NO = #{commentNo}
+   </select>
+</mapper>

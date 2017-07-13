@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Fire">
+	<resultMap type="FireVO" id="ResultFire">
+		<result property="classify" column="CLASSIFY" />
+		<result property="fireNo" column="FIRE_NO" />
+		<result property="fireById" column="FIRE_BY_ID" />
+		<result property="fireId" column="FIRE_ID" />
+		<result property="lev" column="LEV" />
+		<result property="commentNo" column="COMMENT_NO" />	
+		<result property="co" column="CO" />
+	</resultMap>
+	
+	<insert id="doChannelContentFire" parameterType="FireVO">
+		INSERT INTO FIRE VALUES(#{classify}, #{fireNo}, #{fireById}, #{fireId}, 0, 0)
+	</insert>
+	
+	<select id="getFireArticleList" parameterType="FireVO" resultMap="ResultFire">
+		SELECT CLASSIFY, FIRE_NO, FIRE_BY_ID, FIRE_ID, LEV, COMMENT_NO
+		FROM FIRE
+		WHERE CLASSIFY = #{classify}
+		AND FIRE_ID = #{fireId}
+		AND FIRE_BY_ID = #{fireById}
+	</select>
+	
+	<select id="getfireList" parameterType="FireVO" resultMap="ResultFire">
+		SELECT CLASSIFY, FIRE_NO, FIRE_BY_ID, FIRE_ID, LEV, COMMENT_NO
+		FROM FIRE
+		WHERE CLASSIFY = #{classify}
+		AND FIRE_BY_ID = #{fireById}
+	</select>
+	
+
+	
+	<delete id="cancelChannelContentFire" parameterType="FireVO">
+		DELETE FIRE
+		WHERE CLASSIFY = #{classify}
+		AND FIRE_NO = #{fireNo}
+		AND FIRE_ID = #{fireId}
+		AND FIRE_BY_ID = #{fireById}
+	</delete>
+	
+	<select id="getFireCommentList" parameterType="FireVO" resultMap="ResultFire">
+		SELECT CLASSIFY, FIRE_NO, FIRE_BY_ID, FIRE_ID, LEV, COMMENT_NO
+		FROM FIRE
+		WHERE CLASSIFY = #{classify}
+		AND FIRE_BY_ID = #{fireById}
+	</select>
+	
+	<select id="getFireCommentList2" resultMap="ResultFire">
+		SELECT DISTINCT CLASSIFY, FIRE_NO, LEV, COMMENT_NO, CO
+			FROM (SELECT COUNT(*) AS CO, CLASSIFY, FIRE_NO, LEV, COMMENT_NO
+           	FROM FIRE
+           	WHERE CLASSIFY LIKE '%_COMMENT'
+           	GROUP BY CLASSIFY, FIRE_NO, LEV, COMMENT_NO)
+			ORDER BY CO DESC
+	</select>
+	
+	<insert id="fireComment" parameterType="FireVO">
+		INSERT INTO FIRE(CLASSIFY, FIRE_NO, FIRE_BY_ID, FIRE_ID, LEV, COMMENT_NO) VALUES(#{classify}, #{fireNo}, #{fireById}, #{fireId}, #{lev}, #{commentNo})
+	</insert>
+	
+	<delete id="fireCommentCancel" parameterType="FireVO">
+		DELETE FIRE
+		WHERE CLASSIFY = #{classify}
+		AND FIRE_NO = #{fireNo}
+		AND FIRE_ID = #{fireId}
+		AND FIRE_BY_ID = #{fireById}
+		AND COMMENT_NO = #{commentNo}
+	</delete>
+	
+	<select id="getFireContentList" resultMap="ResultFire">
+		SELECT DISTINCT CLASSIFY, FIRE_NO, LEV, COMMENT_NO, CO
+		FROM (SELECT COUNT(*) AS CO, CLASSIFY, FIRE_NO, LEV, COMMENT_NO
+           FROM FIRE
+           WHERE CLASSIFY NOT LIKE '%_COMMENT'
+           GROUP BY CLASSIFY, FIRE_NO, LEV, COMMENT_NO)
+		ORDER BY CO DESC
+	</select>
+	
+	<delete id="contentDeleteC" parameterType="ChannelArticleVO">
+		DELETE FROM CHANNEL_ARTICLE
+		WHERE CHAN_ARTICLE_NO = #{chan_article_no}
+	</delete>
+	
+	<delete id="likeDeleteC" parameterType="ChannelArticleVO">
+		DELETE FROM CHANNEL_LIKE
+		WHERE ARTICLE_NO = #{chan_article_no}
+	</delete>
+	
+	<delete id="contentDeleteG" parameterType="GroupVO">
+		DELETE FROM GROUP_MAIN
+		WHERE WRITE_NO = #{writeNo}
+	</delete>
+	<delete id="likeDeleteG" parameterType="ChannelArticleVO">
+		DELETE FROM GROUP_LIKE
+		WHERE WRITE_NO = #{writeNo}
+	</delete>
+	
+	<delete id="contentDeleteM" parameterType="MypageVO">
+		DELETE FROM MY_PAGE
+		WHERE WRITE_NO = #{writeno}
+	</delete>
+	<delete id="likeDeleteM" parameterType="ChannelArticleVO">
+		DELETE FROM MYPAGE_LIKE
+		WHERE WRITE_NO = #{writeno}
+	</delete>
+	<delete id="fireDelete">
+		DELETE FROM FIRE
+		WHERE CLASSIFY = #{classify} AND FIRE_NO = #{fireNo} AND LEV = 0 AND COMMENT_NO = 0
+	</delete>
+	<delete id="fireCommentDelete">
+		DELETE FROM FIRE
+		WHERE CLASSIFY = #{classify} AND FIRE_NO = #{fireNo} AND COMMENT_NO = #{commentNo}
+	</delete>
+	<delete id="commentDeleteC" parameterType="ChannelCommentVO">
+		DELETE FROM CHANNEL_COMMENT
+		WHERE COMMENT_NO = #{comment_no}
+	</delete>
+	<delete id="commentDeleteG" parameterType="GroupCommentVO">
+		DELETE FROM GROUP_COMMENT
+		WHERE COMMENT_NO = #{commentNo}
+	</delete>
+	<delete id="commentDeleteM" parameterType="MypageCommentVO">
+		DELETE FROM MYPAGE_COMMENT
+		WHERE COMMENT_NO = #{commentno}
+	</delete>
+	
+</mapper>

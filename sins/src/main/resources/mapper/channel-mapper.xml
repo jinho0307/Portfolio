@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Channel">
+	<!-- ChannelVO -->
+	<resultMap id="resultChannel" type="ChannelVO">
+		<id property="channel_no" column="channel_no" />
+		<result property="channel_name" column="CHANNEL_NAME" />
+		<result property="channel_create_date" column="CHANNEL_CREATE_DATE" />
+		<result property="channel_filepath" column="channel_filepath" />
+		<result property="channel_keyword" column="CHANNEL_KEYWORD" />
+		<result property="channel_like" column="CHANNEL_LIKE" />
+		<result property="channel_user_id" column="channel_user_id" />
+		<result property="channel_info" column="channel_info" />
+		<result property="category1" column="CATEGORY1" />
+		<result property="chan_article_no" column="CHAN_ARTICLE_NO" />
+		<result property="chan_article_content" column="CHAN_ARTICLE_CONTENT" />
+		<result property="chan_article_write_date" column="CHAN_ARTICLE_WRITE_DATE" />
+		<result property="chan_article_filepath" column="CHAN_ARTICLE_FILEPATH" />
+		<result property="chan_article_like" column="CHAN_ARTICLE_LIKE" />
+		<result property="user_id_bak" column="USER_ID_BAK" />
+		<result property="classify" column="CLASSIFY" />
+		<result property="follow_count" column="FOLLOW_COUNT" />
+		<result property="user_id" column="USER_ID" />
+		<result property="like_amount" column="LIKE_AMOUNT" />
+	</resultMap>
+
+	<select id="selectChannelPage" parameterType="ChannelVO"
+		resultType="ChannelVO" resultMap="resultChannel">
+		SELECT channel_filepath,
+		CHANNEL_NO,CHANNEL_INFO, CHANNEL_USER_ID, CHANNEL_NAME
+		FROM
+		CHANNEL_LIST
+		WHERE CHANNEL_LIST.DELETE_YN = 'N' AND
+		CHANNEL_NO=#{channel_no,jdbcType=NUMERIC}
+	</select>
+
+	<select id="channelImageCalled" parameterType="ChannelVO"
+		resultType="ChannelVO" resultMap="resultChannel">
+		SELECT CHANNEL_NO, channel_filepath,
+		CHANNEL_USER_ID
+		FROM CHANNEL_LIST
+		WHERE CHANNEL_NO =#{channel_no}
+	</select>
+
+	<!-- ChannelListVO -->
+	<resultMap id="resultChannelList" type="ChannelListVO">
+		<id property="channel_no" column="CHANNEL_NO" />
+		<result property="channel_user_id" column="CHANNEL_USER_ID" />
+		<result property="channel_name" column="CHANNEL_NAME" />
+		<result property="channel_info" column="CHANNEL_INFO" />
+		<result property="channel_create_date" column="CHANNEL_CREATE_DATE" />
+		<result property="channel_filepath" column="channel_filepath" />
+		<result property="channel_keyword" column="CHANNEL_KEYWORD" />
+		<result property="channel_like" column="CHANNEL_LIKE" />
+		<result property="category1" column="CATEGORY1" />
+		<result property="delete_yn" column="delete_yn" />
+	</resultMap>
+
+	<update id="updateChannel" parameterType="ChannelListVO">
+		update channel_list
+		set channel_name= #{channel_name, jdbcType=VARCHAR},
+		channel_info=#{channel_info, jdbcType=VARCHAR},
+		channel_filepath=#{channel_filepath, jdbcType=VARCHAR}
+		where channel_no= #{channel_no, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteChannel" parameterType="ChannelListVO">
+		update channel_list
+		set delete_yn='Y'
+		where channel_no=#{channel_no, jdbcType=NUMERIC}
+	</update>
+	
+
+	<insert id="insertChannel" parameterType="ChannelListVO">
+		INSERT INTO
+		CHANNEL_LIST
+		VALUES (SONG_SEQ_CHANNEL_NO.nextval, #{channel_user_id},
+		#{channel_name,jdbcType=VARCHAR}, #{channel_info}, default
+		,#{channel_filepath,jdbcType=VARCHAR }, 
+		#{channel_keyword,jdbcType=VARCHAR}, default, #{category1}, default )
+	</insert>
+
+	<select id="selectChannelList" parameterType="ChannelListVO"
+		resultType="ChannelVO" resultMap="resultChannel">
+		SELECT CHANNEL_NO,CHANNEL_NAME,
+		CHANNEL_USER_ID,CATEGORY1, CHANNEL_FILEPATH
+		FROM CHANNEL_LIST
+		JOIN
+		CATEGORY1 ON
+		CATEGORY1 = CATEGORY_NAME
+		WHERE DELETE_YN = 'N'
+	</select>
+
+	<!-- ChannelArticleVO -->
+
+	<resultMap id="resultChannelArticle" type="ChannelArticleVO">
+		<id property="channel_no" column="channel_no" />
+		<result property="chan_article_no" column="CHAN_ARTICLE_NO" />
+		<result property="chan_article_content" column="CHAN_ARTICLE_CONTENT" />
+		<result property="chan_article_write_date" column="CHAN_ARTICLE_WRITE_DATE" />
+		<result property="chan_article_filepath" column="CHAN_ARTICLE_FILEPATH" />
+		<result property="chan_article_like" column="CHAN_ARTICLE_LIKE" />
+		<result property="user_id_bak" column="USER_ID_BAK" />
+		<result property="classify" column="CLASSIFY" />
+		<result property="report" column="report" />
+		<result property="delete_yn" column="delete_yn" />
+		<result property="channel_user_id" column="channel_user_id" />
+		<result property="user_id" column="user_id" />
+		<result property="like_amount" column="LIKE_AMOUNT" />
+	</resultMap>
+
+	<insert id="insertChannelArticle" parameterType="ChannelArticleVO">
+		insert into
+		channel_article
+		values (#{channel_no, jdbcType=NUMERIC},
+		SONG_SEQ_CHAN_ARTICLE_NO.nextval,
+		#{chan_article_content,jdbcType=VARCHAR}, default, '@',
+		0, #{user_id_bak, jdbcType=VARCHAR}, 'CHANNEL_LIKE', 0, 'N',
+		#{channel_user_id, jdbcType=VARCHAR}, default)
+	</insert>
+
+	<select id="selectArticle" parameterType="ChannelArticleVO"
+		resultType="ChannelArticleVO" resultMap="resultChannelArticle">
+	 	SELECT CHANNEL_NO,
+		CHAN_ARTICLE_NO, CHAN_ARTICLE_CONTENT,
+		CHAN_ARTICLE_WRITE_DATE, LIKE_AMOUNT
+		FROM CHANNEL_ARTICLE
+		WHERE CHANNEL_NO=#{channel_no}
+	</select>
+
+	<delete id="deleteArticle" parameterType="ChannelArticleVO">
+    
+    DELETE FROM channel_article
+    WHERE CHAN_ARTICLE_NO=#{chan_article_no, jdbcType=NUMERIC}
+    </delete>
+    
+    <update id="articleUpdate" parameterType="ChannelArticleVO">
+    update channel_article
+	set chan_article_content = #{chan_article_content, jdbcType=VARCHAR}, chan_article_filepath=#{chan_article_filepath, jdbcType=VARCHAR}
+	where channel_no=#{channel_no, jdbcType=NUMERIC} and chan_article_no=#{chan_article_no, jdbcType=NUMERIC}
+    </update>
+    
+	<!-- ChannelLikeVO -->
+
+	<resultMap id="resultChannelLike" type="ChannelLikeVO">
+		<id property="channel_no" column="channel_no" />
+		<result property="chan_article_no" column="ARTICLE_NO" />
+		<result property="user_id" column="USER_ID" />
+		<result property="classify" column="CLASSIFY" />
+	</resultMap>
+	<select id="selectLikeList" parameterType="ChannelArticleVO"
+		resultMap="resultChannelLike">
+		SELECT ARTICLE_NO, CHANNEL_NO, USER_ID, CLASSIFY
+		FROM
+		CHANNEL_LIKE
+		WHERE USER_ID = #{user_id}
+	</select>
+	<insert id="articleLikeClick" parameterType="ChannelLikeVO">
+		insert into
+		channel_like
+		values (#{chan_article_no, jdbcType=NUMERIC}, #{user_id,
+		jdbcType=VARCHAR}, 'CHANNEL_LIKE', #{channel_no, jdbcType=NUMERIC})
+	</insert>
+
+	<delete id="articleUnLikeClick" parameterType="ChannelArticleVO">
+		delete from
+		channel_like
+		where channel_no=#{channel_no} and
+		ARTICLE_NO=#{chan_article_no} and user_id=#{user_id}
+	</delete>
+	<!-- ChannelCommentVO -->
+	<resultMap id="resultChannelComment" type="ChannelCommentVO">
+		<id property="comment_no" column="comment_no" />
+		<result property="chan_article_no" column="CHAN_ARTICLE_NO" />
+		<result property="chan_article_content" column="CHAN_ARTICLE_CONTENT" />
+		<result property="chan_article_filepath" column="CHAN_ARTICLE_FILEPATH" />
+		<result property="classify" column="CLASSIFY" />
+		<result property="comment_date" column="COMMENT_DATE" />
+		<result property="delete_yn" column="delete_yn" />
+		<result property="ref" column="REF" />
+		<result property="lev" column="LEV" />
+		<result property="report" column="report" />
+		<result property="user_id" column="user_id" />
+		<result property="backup_id" column="USER_ID_BAK" />
+	</resultMap>
+
+	<select id="channelCommentList" parameterType="int"
+		resultMap="resultChannelComment">
+		SELECT COMMENT_NO, USER_ID, CONTENT,
+		COMMENT_DATE,PHOTO_PATH, DELETE_YN, CHAN_ARTICLE_NO
+		FROM
+		CHANNEL_COMMENT
+		JOIN MEMBER USING (USER_ID)
+		WHERE DELETE_YN='N' AND
+		CHAN_ARTICLE_NO =#{chan_article_no jdbcType=NUMERIC}
+		ORDER BY COMMENT_NO DESC
+	</select>
+
+	<insert id="channelCommentInsert" parameterType="ChannelCommentVO">
+		INSERT INTO CHANNEL_COMMENT
+		VALUES (SONG_SEQ_COMMENT_NO.nextval,#{user_id, jdbcType=VARCHAR},
+		#{content, jdbcType=VARCHAR},default,0,0,'@','N',#{user_id, jdbcType=VARCHAR},#{chan_article_no, jdbcType=NUMERIC},'CHANNEL_COMMENT',0)
+	</insert>
+	
+	<delete id="deleteChannelComment" parameterType="ChannelCommentVO">
+	delete 
+	from channel_comment
+	where comment_no=#{comment_no}
+	</delete>
+	<!-- 원석부분 -->
+	<select id="getMasterId" parameterType="ChannelVO" resultType="string">
+		SELECT CHANNEL_USER_ID
+		FROM CHANNEL_LIST
+		WHERE CHANNEL_NO = #{channel_no}
+	</select>
+	
+	<select id="getChannelNo" parameterType="string" resultType="int">
+		SELECT CHANNEL_NO
+		FROM CHANNEL_LIST
+		WHERE CHANNEL_NAME = #{setChannel_name}
+	</select>
+	<select id="getChannelArticle" parameterType="FireVO" resultMap="resultChannelArticle">
+      SELECT *
+      FROM CHANNEL_ARTICLE
+      WHERE CHAN_ARTICLE_NO = #{fireNo}
+   </select>
+   
+   <select id="getChannelComment" parameterType="FireVO" resultMap="resultChannelComment">
+      SELECT *
+      FROM CHANNEL_COMMENT
+      WHERE COMMENT_NO = #{commentNo}
+   </select>
+
+</mapper>

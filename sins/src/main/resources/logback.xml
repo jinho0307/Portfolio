@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration >
+ 
+ 
+  <property resource="file.properties"/> 
+ 
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level [%thread] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${dir.url}/../log/sins.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 하루에 한개식 파일 생성-->
+            <fileNamePattern>${dir.url}/../log/%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- 30일뒤 삭제 -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+ 
+        <encoder>
+            <pattern>%d{yy/MM/dd HH:mm:ss} %-5level - %msg%n</pattern>
+        </encoder>
+    </appender>
+ 
+    <logger name="org.springframework" level="info">
+      <appender-ref ref="console"/>
+    </logger>
+  		  
+    
+    <logger name="sinsLog" level="info">
+    	
+         <appender-ref ref="FILE"/>
+    </logger>
+    
+          
+ <!--      <root level="info">
+           <appender-ref ref="console"/>
+          
+      </root> -->
+     
+        
+</configuration>

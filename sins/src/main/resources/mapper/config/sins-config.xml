@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+
+	<typeAliases>
+		<typeAlias type="com.seven.sins.qna.vo.QnaContent" alias="QnaContent"/>
+		<typeAlias type="com.seven.sins.qna.vo.QnaComment" alias="QnaComment"/>
+		<typeAlias alias="NoticeVO" type="com.seven.sins.notice.vo.NoticeVO"/>
+		
+		<typeAlias type="com.seven.sins.message.vo.MessageVO" alias="MessageVO"/>
+		<typeAlias type="com.seven.sins.message.vo.MessageListVO" alias="MsglistVO"/>
+		<typeAlias type="com.seven.sins.message.vo.SpamUser" alias="SpamVO"/>
+		<typeAlias type="com.seven.sins.alert.vo.AlertVO" alias="AlertVO"/>
+				
+		<typeAlias type="com.seven.sins.member.vo.MemberVO" alias="MemberVO"/>
+		
+		<typeAlias type="com.seven.sins.friend.vo.FriendVO" alias="FriendVO"/>
+		
+		<typeAlias type="com.seven.sins.mypage.vo.MypageVO" alias="MypageVO"/>
+		<typeAlias type="com.seven.sins.mypage.vo.MypageCommentVO" alias="MypageCommentVO"/>
+		<typeAlias alias="MypageLikeVO" type="com.seven.sins.mypage.vo.MypageLikeVO"/>
+		<typeAlias type="com.seven.sins.newsfeed.vo.NewsfeedVO" alias="NewsfeedVO"/>
+		
+		<typeAlias type="com.seven.sins.group.vo.GroupVO" alias="GroupVO"/>
+		
+      <typeAlias type="com.seven.sins.group.vo.GroupLikeVO" alias="GroupLikeVO"/>
+      <typeAlias type="com.seven.sins.group.vo.GroupWriteVO" alias="GroupWriteVO"/>
+      <typeAlias type="com.seven.sins.group.vo.GroupMemberVO" alias="GroupMemberVO"/>
+      <typeAlias type="com.seven.sins.group.vo.GroupCommentVO" alias="GroupCommentVO"/>
+      
+       <typeAlias type="com.seven.sins.channel.vo.ChannelVO" alias="ChannelVO"/>
+      <typeAlias type="com.seven.sins.channel.vo.ChannelArticleVO" alias="ChannelArticleVO"/>
+      <typeAlias type="com.seven.sins.channel.vo.ChannelCommentVO" alias="ChannelCommentVO"/>
+      <typeAlias type="com.seven.sins.channel.vo.ChannelFollowerVO" alias="ChannelFollowerVO"/>
+      <typeAlias type="com.seven.sins.channel.vo.ChannelLikeVO" alias="ChannelLikeVO"/>
+      <typeAlias type="com.seven.sins.channel.vo.ChannelListVO" alias="ChannelListVO"/>
+      
+      <typeAlias alias="SMemberVO" type="com.seven.sins.search.vo.SearchMemberVO"/>
+      <typeAlias alias="SChannelVO" type="com.seven.sins.search.vo.SearchChannelVO"/>
+      <typeAlias alias="SGroupVO" type="com.seven.sins.search.vo.SearchGroupVO"/>
+      
+      <typeAlias alias="FireVO" type="com.seven.sins.fire.vo.FireVO"/>
+	</typeAliases>
+	
+
+</configuration>

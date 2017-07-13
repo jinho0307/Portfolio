@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+
+#chatmain{
+	width:240px;
+	height: 500px;
+	border: 1px solid black;
+	background: white;
+}
+#mytext{
+	text-align: right;
+}
+.youtext{
+	text-align: left;
+}
+#text{
+	width:240px;
+	height: 460px;
+	overflow: auto;
+	
+	
+}

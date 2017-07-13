@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Member">
+	<resultMap type="MemberVO" id="ResultMember">
+		<id property="userId" column="USER_ID" />
+		<result property="userPwd" column="USER_PWD" />
+		<result property="userName" column="USER_NAME" />
+		<result property="phone" column="PHONE" />
+		<result property="address" column="ADDRESS" />
+		<result property="manager" column="MANAGER" />
+		<result property="enrollDate" column="ENROLL_DATE" />	
+		<result property="userProfile" column="USER_PROFILE" />
+		<result property="birth" column="BIRTH" />
+		<result property="gender" column="GENDER" />
+		<result property="loginFailCheck" column="LOGIN_FAIL_CHECK" />	
+		<result property="banTime" column="BAN_TIME" />
+	</resultMap>
+	
+	<select id="loginCheck" parameterType="MemberVO" resultType="MemberVO" resultMap="ResultMember">
+		SELECT *
+		FROM MEMBER 
+		WHERE USER_ID = #{userId} AND USER_PWD = #{userPwd}
+	</select>
+	
+	<select id="getAllMember" resultType="MemberVO" resultMap="ResultMember">
+		SELECT *
+		FROM MEMBER 
+		WHERE USER_ID != 'admin'
+	</select>
+	
+	
+	<update id="findPw" parameterType="MemberVO">
+		UPDATE member 
+		SET USER_PWD = #{userPwd}
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<select id="idCheck" parameterType="MemberVO" resultType="int">
+		SELECT COUNT(USER_ID) FROM MEMBER WHERE USER_ID = #{userId}
+	</select>
+	
+	<select id="phoneCheck" parameterType="string" resultType="int">
+		SELECT COUNT(PHONE) FROM MEMBER WHERE PHONE = #{phone}
+	</select>
+	
+	<select id="enrollMember" parameterType="MemberVO" resultType="int">
+		INSERT INTO MEMBER(USER_ID, USER_PWD, USER_NAME, PHONE, GENDER, BAN_TIME, USER_PROFILE) VALUES(#{userId}, #{userPwd}, #{userName}, #{phone}, #{gender}, TO_CHAR(SYSDATE, 'YYYY/MM/DD HH24:MI:SS'), '../../images/defaultImg.jpg')
+	</select>
+	
+	<select id="findId" parameterType="MemberVO" resultType="MemberVO" resultMap="ResultMember">
+		SELECT * FROM MEMBER WHERE USER_NAME = #{userName} AND PHONE = #{phone}
+	</select>
+	
+	<select id="allmemberid" resultType="string">
+    	SELECT USER_ID FROM MEMBER
+    </select>
+    
+    <update id="changePwd" parameterType="MemberVO">
+		UPDATE MEMBER
+		SET USER_PWD = #{userPwd}
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<update id="changeBirth" parameterType="MemberVO">
+		UPDATE MEMBER
+		SET BIRTH = #{birth}
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<update id="phoneChange" parameterType="MemberVO">
+		UPDATE MEMBER
+		SET PHONE = #{phone}
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<delete id="deleteMember" parameterType="MemberVO">
+		DELETE MEMBER
+		WHERE USER_ID = #{userId}
+	</delete>
+	
+	<select id="getCity" resultType="string">
+		SELECT DISTINCT CITY
+		FROM ADDRESS
+	</select>
+	
+	<select id="getPartition" parameterType="string" resultType="string">
+		SELECT PARTITION
+		FROM ADDRESS
+		WHERE CITY = #{city}
+	</select>
+	
+	<update id="changeAddress" parameterType="MemberVO">
+		UPDATE MEMBER
+		SET ADDRESS = #{address}
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<update id="setLoginFailCheck" parameterType="MemberVO">
+		UPDATE MEMBER
+		SET LOGIN_FAIL_CHECK = LOGIN_FAIL_CHECK + 1
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<select id="getLoginFailCheck" parameterType="MemberVO" resultType="int">
+		SELECT LOGIN_FAIL_CHECK
+		FROM MEMBER
+		WHERE USER_ID = #{userId}
+	</select>
+	
+	<update id="setBanTime" parameterType="MemberVO">
+		UPDATE MEMBER
+		SET BAN_TIME = TO_CHAR(SYSDATE + 30/(24*60), 'YY/MM/DD HH24:MI:SS')
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<update id="loginFailCheckZero" parameterType="MemberVO">
+		UPDATE MEMBER
+		SET LOGIN_FAIL_CHECK = 0
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<update id="addressDelete">
+		UPDATE MEMBER
+		SET ADDRESS = ''
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<update id="birthDelete">
+		UPDATE MEMBER
+		SET BIRTH = ''
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<select id="userCheck" parameterType="MemberVO" resultType="int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE USER_ID = #{userId} AND USER_PWD = #{userPwd}
+	</select>
+	
+	<update id="banTimePlus">
+		UPDATE MEMBER
+		SET BAN_TIME = '2099/12/31 00:00:00'
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<update id="banTimeMinus">
+		UPDATE MEMBER
+		SET BAN_TIME = TO_CHAR(TO_DATE(TO_CHAR(SYSDATE, 'YYYY/MM/DD HH24:MI:SS'), 'YYYY/MM/DD HH24:MI:SS') - 1/24/60, 'YYYY/MM/DD HH24:MI:SS')
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<delete id="memberDelete">
+		DELETE from MEMBER
+		WHERE USER_ID = #{userId}
+	</delete>
+	
+	<select id="getUserProfileC" parameterType="ChannelArticleVO" resultMap="ResultMember" >
+		SELECT *
+		FROM MEMBER
+		WHERE USER_ID = #{user_id_bak}
+	</select>
+	
+	<select id="getUserProfileG" parameterType="GroupWriteVO" resultMap="ResultMember" >
+		SELECT *
+		FROM MEMBER
+		WHERE USER_ID = #{userId}
+	</select>
+	
+	<select id="getUserProfileM" parameterType="MypageVO" resultMap="ResultMember" >
+		SELECT *
+		FROM MEMBER
+		WHERE USER_ID = #{userid}
+	</select>
+	
+	<select id="getUserProfileCC" parameterType="ChannelCommentVO" resultMap="ResultMember" >
+		SELECT *
+		FROM MEMBER
+		WHERE USER_ID = #{user_id}
+	</select>
+	
+	<select id="getUserProfileGC" parameterType="GroupCommentVO" resultMap="ResultMember" >
+		SELECT *
+		FROM MEMBER
+		WHERE USER_ID = #{userId}
+	</select>
+	
+	<select id="getUserProfileMC" parameterType="MypageCommentVO" resultMap="ResultMember" >
+		SELECT *
+		FROM MEMBER
+		WHERE USER_ID = #{userid}
+	</select>
+	<update id="propathchange" parameterType="MemberVO">
+		update MEMBER set 
+		USER_PROFILE = #{userProfile}
+		where user_id = #{userId}
+	</update>
+</mapper>

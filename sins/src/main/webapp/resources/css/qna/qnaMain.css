@@ -1,0 +1,23 @@
+@CHARSET "UTF-8";
+
+
+
+
+.tds, .ths{
+padding-left:10px;
+padding-right:10px;
+}
+
+.buttons{
+	position:relative;
+	float:left;
+	left:550px;
+	top:20px;
+}
+
+
+
+
+
+
+}

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="newsfeed">
+	<!-- 마이페이지용 -->
+	<resultMap id="resultMypage" type="MypageVO">
+		<id property="writeno" column="WRITE_NO" />
+		<result property="userid" column="USER_ID" />
+		<result property="filepath" column="FILEPATH" />
+		<result property="content" column="CONTENT" />
+		<result property="keyword" column="KEYWORD" />
+		<result property="writedate" column="WRITE_DATE" />
+		<result property="writelike" column="WRITE_LIKE" />
+		<result property="backupid" column="BACKUP_ID" />
+		<result property="classify" column="CLASSIFY" />
+		<result property="createid" column="CREATE_ID" />
+		<result property="report" column="REPORT" />
+		<result property="username" column="USER_NAME" />
+		<result property="userprofile" column="USER_PROFILE" />
+	</resultMap>
+
+
+	<!-- 마이페이지 댓글용 -->
+	<resultMap id="resultMypageComment" type="MypageCommentVO">
+		<id property="commentno" column="COMMENT_NO" />
+		<result property="userid" column="USER_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="commentdate" column="COMMENT_DATE" />
+		<result property="lev" column="LEV" />
+		<result property="ref" column="REF" />
+		<result property="photopath" column="PHOTO_PATH" />
+		<result property="backupid" column="BACKUP_ID" />
+		<result property="contentno" column="CONTENT_NO" />
+		<result property="classfy" column="CLASSIFY" />
+		<result property="report" column="REPORT" />
+		<result property="username" column="USER_NAME" />
+		<result property="userprofile" column="USER_PROFILE" />
+	</resultMap>
+
+	<!-- member -->
+	<resultMap type="MemberVO" id="ResultMember">
+		<id property="userId" column="USER_ID" />
+		<result property="userPwd" column="USER_PWD" />
+		<result property="userName" column="USER_NAME" />
+		<result property="phone" column="PHONE" />
+		<result property="address" column="ADDRESS" />
+		<result property="manager" column="MANAGER" />
+		<result property="enrollDate" column="ENROLL_DATE" />
+		<result property="userProfile" column="USER_PROFILE" />
+		<result property="parsonalId" column="PARSONAL_ID" />
+		<result property="gender" column="GENDER" />
+		<result property="loginFailCheck" column="LOGIN_FAIL_CHECK" />
+		<result property="banTime" column="BAN_TIME" />
+	</resultMap>
+
+	<!-- GroupWrite -->
+	<resultMap type="GroupWriteVO" id="resultGroupWrite">
+		<id property="writeNo" column="WRITE_NO" />
+		<result property="groupNo" column="GROUP_NO" />
+		<result property="content" column="CONTENT" />
+		<result property="userId" column="USER_ID" />
+		<result property="filepath" column="FILEPATH" />
+		<result property="writeLike" column="WRITE_LIKE" />
+		<result property="writeDate" column="WRITE_DATE" />
+		<result property="groupNoBak" column="GROUP_NO_BAK" />
+		<result property="groupNameBak" column="GROUP_NAME_BAK" />
+		<result property="userIdBak" column="USER_ID_BAK" />
+		<result property="classify" column="CLASSIFY" />
+		<result property="report" column="REPORT" />
+		<result property="deleteYN" column="DELETE_YN" />
+	</resultMap>
+
+	<!-- GroupComment -->
+	<resultMap type="GroupCommentVO" id="resultGroupComment">
+		<id property="commentNo" column="COMMENT_NO" />
+		<result property="userId" column="USER_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="commentDate" column="COMMENT_DATE" />
+		<result property="lev" column="LEV" />
+		<result property="ref" column="REF" />
+		<result property="photopath" column="PHOTO_PATH" />
+		<result property="backupId" column="BACKUP_ID" />
+		<result property="writeNo" column="WRITE_NO" />
+		<result property="classify" column="CLASSIFY" />
+		<result property="report" column="REPORT" />
+		<result property="deleteYN" column="DELETE_YN" />
+	</resultMap>
+
+	<!-- 채널 맵 필요 -->
+
+	<!-- 뉴스피드vo -->
+	<resultMap id="resultNewsfeed" type="NewsfeedVO">
+		<id property="writeno" column="WRITE_NO" />
+		<result property="userid" column="USER_ID" />
+		<result property="filepath" column="FILEPATH" />
+		<result property="content" column="CONTENT" />
+		<result property="keyword" column="KEYWORD" />
+		<result property="writedate" column="WRITE_DATE" />
+		<result property="writelike" column="WRITE_LIKE" />
+		<result property="backupid" column="BACKUP_ID" />
+		<result property="classify" column="CLASSIFY" />
+		<result property="createid" column="CREATE_ID" />
+		<result property="report" column="REPORT" />
+		<result property="username" column="USER_NAME" />
+		<result property="userprofile" column="USER_PROFILE" />
+		<result property="groupNo" column="GROUP_NO" />
+		<result property="groupNoBak" column="GROUP_NO_BAK" />
+		<result property="groupNameBak" column="GROUP_NAME_BAK" />
+		<result property="userIdBak" column="USER_ID_BAK" />
+		<result property="deleteYN" column="DELETE_YN" />
+		<result property="channel_no" column="CHANNEL_NO" />
+		<result property="channel_user_id" column="CHANNEL_USER_ID" />
+	</resultMap>
+
+
+	   <select id="selectNewsfeed" parameterType="string" resultMap="resultNewsfeed">
+      select write_no, WRITE_DATE, CONTENT, CREATE_ID, FILEPATH, WRITE_LIKE,
+      CLASSIFY, USER_NAME, REPORT, USER_PROFILE, USER_ID
+      from MY_PAGE
+      join MEMBER using(user_id)
+      where
+      user_id=#{userid} or CREATE_ID=#{userid}
+      UNION ALL
+      select
+      WRITE_NO,WRITE_DATE, CONTENT, GROUP_MAIN.USER_ID, GROUP_MAIN.FILEPATH,
+      GROUP_MAIN.WRITE_LIKE, GROUP_MAIN.CLASSIFY, user_name, GROUP_NO, USER_PROFILE, GROUP_MAIN.USER_ID
+      from GROUP_MAIN
+      join GROUP_LIST using(Group_no)
+      join MEMBER on(GROUP_MAIN.USER_ID=MEMBER.user_id)
+      where GROUP_LIST.USER_ID=#{userid}
+      UNION ALL
+      select CHAN_ARTICLE_NO,
+      CHAN_ARTICLE_WRITE_DATE, CHAN_ARTICLE_CONTENT,
+      USER_ID_BAK,
+      CHAN_ARTICLE_FILEPATH, CHAN_ARTICLE_LIKE, CLASSIFY,
+      USER_NAME, CHANNEL_NO, USER_PROFILE, USER_ID_BAK
+      from
+      CHANNEL_ARTICLE
+      join MEMBER on(user_id = USER_ID_BAK)
+      where
+      USER_ID_BAK=#{userid}
+      UNION ALL
+      select write_no, WRITE_DATE, CONTENT,
+      CREATE_ID, FILEPATH, WRITE_LIKE,
+      CLASSIFY, USER_NAME, REPORT, USER_PROFILE, USER_ID
+      from MY_PAGE
+      join
+      MEMBER using(user_id)
+      where user_id IN (select REQUEST_ID from FRIEND
+      where ACCEPT_YN = 'Y'
+      and RESPONSE_ID = #{userid})
+      UNION ALL
+      select
+      write_no, WRITE_DATE, CONTENT, CREATE_ID, FILEPATH, WRITE_LIKE,
+      CLASSIFY, USER_NAME, REPORT, USER_PROFILE, USER_ID
+      from MY_PAGE
+      join MEMBER using(user_id)
+      where user_id
+      IN (select RESPONSE_ID from FRIEND
+      where ACCEPT_YN = 'Y'
+      and
+      REQUEST_ID = #{userid})
+      order by 2 desc
+   </select>
+
+</mapper>

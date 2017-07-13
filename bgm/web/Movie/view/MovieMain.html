@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Movie</title>
+<script type="text/javascript" src="/bgm/common/js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$('header').load('/bgm/common/view/header.jsp');
+		$('footer').load('/bgm/common/view/footer.jsp');
+		
+		 $("#btn").click(function(){
+			var isHidden = $("#div1").is(":hidden");
+			if(isHidden){
+				$("#div1").show(2000);
+			}else{
+				$("#div1").hide(2000);
+			}
+			
+		}); 
+		 $("a").mouseover(function(){
+				$(this).css("background","black").css("color","white");
+			});
+			$("a").mouseout(function(){
+				$(this).css("background","none").css("color","black");
+			}); 
+	});
+</script>
+<style type="text/css">
+img {
+	width: 200px;
+	weight: 400px;
+}
+
+table.movie {
+	width: 210px;
+	weight: 420px;
+	color: blue;
+	/* background : blue; */
+	/* BORDER:100; */
+	ALIGN: center;
+}
+
+th {
+	display: inline-block;
+	margin: 1em;
+}
+
+.box {
+	display: inline-block;
+	width: 220px;
+	height: 310px;
+	margin: 1em;
+	background: white;
+}
+
+hr {
+	color: red;
+	background-color: red;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	background-image: url('../영화포스터/12_alstjrrl2003.jpg');
+	background-size: 100%;
+}
+
+.right {
+	text-align: right;
+}
+
+A.movie:link {
+	text-decoration: none;
+	color: black
+}
+
+A.movie:visited {
+	text-decoration: none;
+	color: black
+}
+
+A.movie:hover {
+	text-decoration: none;
+	color: black
+}
+
+div.background {
+	background: black;
+}
+</style>
+</head>
+
+<body>
+	<header></header>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<center>
+	<button id = "btn">동영상보기</button>
+        
+	<div  id = "div1"style="width:100%; height:491px; background: black;  /* display : none; */ ">
+ <center>
+         
+         <br><viedo controls autoplay name="media">
+<source src="/bgm/Movie/예고편/너의이름은.mp4" type="video/mp4">
+<video controls="" autoplay="" name="media" width="784" height="441"><source src="/bgm/Movie/예고편/너의이름은.mp4" type="video/mp4"></video>
+
+        </center> 
+</div>
+	
+	<h1>MovieChart</h1>
+	<hr>
+
+	<table class="movie">
+		<!-- <tr>
+<td><div class="box1">No.1</div></td>
+<td><div class="box1">No.2</div></td>
+<td><div class="box1">No.3</div></td>
+<td><div class="box1">No.4</div></td>
+</tr> -->
+		<tr>
+			<td><a href="/bgm/msearch?movieid=001" class="movie"><img
+					src="/bgm/Movie/영화포스터/포켓몬스터.png"><br>포켓몬스터 볼케니온</a></td>
+			<td><a href="/bgm/Movie/view/판도라.jsp" class="movie"><img
+					src="/bgm/Movie/영화포스터/판도라.png"><br>판도라</a></td>
+			<td><a href="/bgm/Movie/view/Pokemon.jsp" class="movie"><img
+					src="/bgm/Movie/영화포스터/씽.png"><br>SING</a></td>
+			<td><a href="/bgm/Movie/view/Pokemon.jsp" class="movie"><img
+					src="/bgm/Movie/영화포스터/라라랜드.png"><br>라라랜드</a></td>
+		</tr>
+	</table>
+
+	<hr>
+
+	<table class="movie">
+		<!-- <tr>
+<td><div class="box1">No.5</div></td>
+<td><div class="box1">No.6</div></td>
+<td><div class="box1">No.7</div></td>
+<td><div class="box1">No.8</div></td>
+</tr> -->
+		<tr>
+			<td><a href="/bgm/Movie/view/Pokemon.jsp" class="movie"><img
+					src="/bgm/Movie/영화포스터/마스터.png"><br>마스터</a></td>
+			<td><a href="/bgm/Movie/view/Pokemon.jsp" class="movie"><img
+					src="/bgm/Movie/영화포스터/루돌프많이있어.png"><br>영화2</a></td>
+			<td><a href="/bgm/Movie/view/Pokemon.jsp" class="movie"><img
+					src="/bgm/Movie/영화포스터/로그원.png"><br>영화2</a></td>
+			<td><a href="/bgm/Movie/view/Pokemon.jsp" class="movie"><img
+					src="/bgm/Movie/영화포스터/너의이름은.jpg"><br>영화2</a></td>
+		</tr>
+	</table>
+
+</center>
+	<footer></footer>
+</body>
+
+</html>

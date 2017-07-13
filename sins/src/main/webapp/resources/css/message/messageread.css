@@ -1,0 +1,127 @@
+@CHARSET "UTF-8";
+
+#chkth{
+	width : 22px;
+}
+#userth{
+	width : 60px;
+}
+#contentth{
+	width : 200px;
+}
+#dateth{
+	width : 80px;
+}
+#fileth{
+	width : 60px;
+}
+#readth{
+	width : 60px;
+}
+td{
+	
+	text-align: center;
+	
+}
+#listtable{
+	text-align : center;
+	margin-top :  20px;
+	width : 600px;
+	table-layout: fixed;
+}
+
+#listtable th{
+	background: #E7E4F9;
+	color : black;
+	font-weight : bold;
+	padding: 5px;
+}
+
+#listtable td{
+	padding: 5px;
+	border-bottom: 1px solid #E7E4F9;
+	font-size : 15px;
+}
+
+.contents{
+	text-overflow: ellipsis; overflow: hidden;white-space: nowrap;
+}
+#mouseover{
+	width : 300px;
+	background: white;
+}
+#mouseoverid{
+	width: 200px;
+	height: 50px;
+	vertical-align: top;
+	display: inline-block;	
+}
+#movtext{
+	height : 20px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+#paging {
+	margin-top :  10px;
+	text-align : center;
+}
+#pages {
+	float: right;
+}
+
+@media screen and (max-width:500px) {
+	
+	#listdiv {
+		float: none;
+		width: auto;
+		margin: 10px auto 10px;
+	
+	}
+	.content {
+		padding : 5px;
+		float: none;
+		width: auto;
+		margin: auto 5px 10px 10px;
+	}
+	
+	#listtable{
+	width : 100%;
+	table-layout: fixed;
+	}
+
+	#listtable th{
+	background: #E7E4F9;
+	color : black;
+	font-weight : bold;
+	padding: 5px;
+	}
+
+	#listtable td{
+	padding: 5px;
+	border-bottom: 1px solid #E7E4F9;
+	font-size : 15px;
+	}
+	
+	#chkth{
+	width : 15px;
+	}
+	#userth{
+	width : 40px;
+	}
+	#contentth{
+	width : 90px;
+	}
+	#dateth{
+	width : 60px;
+	}
+	#fileth{
+	width : 40px;
+	}
+	#readth{
+	width : 40px;
+	}
+	#seach{
+	width : 90px;
+	}
+}

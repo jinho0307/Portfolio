@@ -1,0 +1,16 @@
+@CHARSET "UTF-8";
+h2 {
+	margin-top : 200px;
+}
+#main {
+	margin:200px auto; 
+	width:500px; 
+	text-align:center;
+}
+
+@media screen and (max-width:500px) {
+	#main {
+		margin:150px auto; 
+		width: 300px;
+	}
+}

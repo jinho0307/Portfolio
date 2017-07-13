@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Notice">
+	<resultMap type="NoticeVO" id="ResultNotice">
+		<id property="noticeNo" column="NOTICE_NO" />
+		<result property="title" column="TITLE" />
+		<result property="content" column="CONTENT" />
+		<result property="filepath" column="FILEPATH" />
+		<result property="writeDate" column="WRITE_DATE" />
+		<result property="readCount" column="READ_COUNT" />
+	</resultMap>
+	
+	<select id="getListCount" resultType="int">
+		SELECT COUNT(*)
+		FROM NOTICE
+	</select> 
+	
+	<select id = "selectList" resultType="NoticeVO" resultMap="ResultNotice">
+	SELECT NOTICE_NO, TITLE, CONTENT, FILEPATH, TO_DATE(WRITE_DATE, 'YY/MM/DD') AS WRITE_DATE, READ_COUNT 
+	FROM ( SELECT ROWNUM, NOTICE_NO, TITLE, CONTENT, FILEPATH, WRITE_DATE, READ_COUNT
+           FROM NOTICE
+           WHERE TRUNC(SYSDATE - WRITE_DATE) <![CDATA[<]]>= 7
+           ORDER BY WRITE_DATE DESC )
+	</select> 
+	 
+	 <select id="noticeDetail" resultType="NoticeVO" resultMap="ResultNotice">
+	 	SELECT NOTICE_NO, TITLE, CONTENT, FILEPATH, WRITE_DATE, READ_COUNT
+	 	FROM NOTICE
+	 	WHERE NOTICE_NO = #{noticeNo}
+	 </select>
+	 
+	 <update id="addReadCount" parameterType="int">
+	 	UPDATE NOTICE SET READ_COUNT = READ_COUNT + 1 WHERE NOTICE_NO = #{noticeNo}
+	 </update>
+	 
+	 
+	 <delete id="noticeDelete" parameterType="int">
+	 	DELETE NOTICE WHERE NOTICE_NO = #{noticeNo}
+	 
+	 </delete>
+	 
+	
+	 <insert id="noticeWrite" parameterType="NoticeVO">
+	 	INSERT INTO NOTICE VALUES(KIM_SEQ_NOTICE.NEXTVAL, #{title}
+	 	, #{content}, null, SYSDATE, 0)
+	 
+	 </insert>
+	 
+	 <update id="noticeUpdate" parameterType="NoticeVO">
+	 	 UPDATE NOTICE SET TITLE=#{title}, CONTENT=#{content},
+	 	 WRITE_DATE= SYSDATE	 	 
+	 	 WHERE NOTICE_NO = #{noticeNo}
+	 
+	 </update>
+	 
+</mapper>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mypage">
+	
+	<!-- 마이페이지용 -->
+	<resultMap id="resultMypage" type="MypageVO">
+		<id property="writeno" column="WRITE_NO" />
+		<result property="userid" column="USER_ID" />
+		<result property="filepath" column="FILEPATH" />
+		<result property="content" column="CONTENT" />
+		<result property="keyword" column="KEYWORD" />
+		<result property="writedate" column="WRITE_DATE" />
+		<result property="writelike" column="WRITE_LIKE" />
+		<result property="backupid" column="BACKUP_ID" />
+		<result property="classify" column="CLASSIFY" />
+		<result property="createid" column="CREATE_ID" />
+		<result property="report" column="REPORT" />
+		<result property="username" column="USER_NAME" />
+		<result property="userprofile" column="USER_PROFILE" />
+	</resultMap>
+	
+	
+	<!-- 마이페이지 댓글용 -->
+	<resultMap id="resultMypageComment" type="MypageCommentVO">
+		<id property="commentno" column="COMMENT_NO" />
+		<result property="userid" column="USER_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="commentdate" column="COMMENT_DATE" />
+		<result property="lev" column="LEV" />
+		<result property="ref" column="REF" />
+		<result property="photopath" column="PHOTO_PATH" />
+		<result property="backupid" column="BACKUP_ID" />
+		<result property="contentno" column="CONTENT_NO" />
+		<result property="classfy" column="CLASSIFY" />
+		<result property="report" column="REPORT" />
+		<result property="username" column="USER_NAME" />
+		<result property="userprofile" column="USER_PROFILE" />
+	</resultMap>
+	
+	<!-- 마이페이지 LIKE -->
+	<resultMap type="MypageLikeVO" id="resultMypageLike">
+	    <id property="writeNo" column="WRITE_NO" />
+		<result property="userid" column="USER_ID" />
+		<result property="classfy" column="CLASSIFY" />
+	</resultMap>
+	
+	<!-- member -->
+	<resultMap type="MemberVO" id="ResultMember">
+		<id property="userId" column="USER_ID" />
+		<result property="userPwd" column="USER_PWD" />
+		<result property="userName" column="USER_NAME" />
+		<result property="phone" column="PHONE" />
+		<result property="address" column="ADDRESS" />
+		<result property="manager" column="MANAGER" />
+		<result property="enrollDate" column="ENROLL_DATE" />	
+		<result property="userProfile" column="USER_PROFILE" />
+		<result property="parsonalId" column="PARSONAL_ID" />
+		<result property="gender" column="GENDER" />
+		<result property="loginFailCheck" column="LOGIN_FAIL_CHECK" />	
+		<result property="banTime" column="BAN_TIME" />
+	</resultMap>
+	
+	<!-- 마이페이지 게시글 목록 -->
+	<select id="mypage" parameterType="String" resultMap="resultMypage">
+		SELECT WRITE_NO, USER_ID, FILEPATH, CONTENT, KEYWORD, WRITE_DATE, WRITE_LIKE, BACKUP_ID, CLASSIFY, CREATE_ID, REPORT, USER_NAME, USER_PROFILE FROM MY_PAGE join MEMBER using(USER_ID) where CREATE_ID = #{userid} order by WRITE_DATE desc
+	</select>
+	<!-- 마이페이지 카운터 -->
+	<select id="mypageCount" resultType="int">
+	SELECT COUNT(*) FROM MY_PAGE
+	</select>
+	<!-- 마이페이지 댓글 목록 -->
+	<select id="mypageComment" parameterType="String" resultMap="resultMypageComment">
+	SELECT COMMENT_NO, M.USER_ID, C.CONTENT, C.COMMENT_DATE, C.LEV, C.REF, C.PHOTO_PATH, C.BACKUP_ID, C.CONTENT_NO, C.CLASSIFY, C.REPORT, USER_NAME, USER_PROFILE
+    FROM MYPAGE_COMMENT C
+    JOIN MEMBER USING(USER_ID)
+    JOIN MY_PAGE M ON(C.CONTENT_NO = M.WRITE_NO)
+    WHERE C.BACKUP_ID = #{userid}
+	</select>
+	<!-- 마이페이지 내정보 -->
+	<select id="memberCheck" parameterType="MemberVO" resultType="MemberVO" resultMap="ResultMember">
+		SELECT * FROM MEMBER WHERE USER_ID = #{userId}
+	</select>
+	
+	
+	
+	<!-- 글 입력 -->
+	<insert id="mypageSend" parameterType="MypageVO">
+		insert into MY_PAGE values(BU_SEQ_MY_PAGE.nextval, #{userid}, #{filepath}, #{content}, default, sysdate, 0, #{userid}, 'MY_PAGE', #{createid}, 0)
+	</insert>
+	
+	<!-- 댓글 입력 -->
+	<insert id="mypageCommentIn" parameterType="MypageCommentVO">
+		insert INTO MYPAGE_COMMENT VALUES(BU_SEQ_MYPAGE_COMMENT.nextval,#{userid},#{content},sysdate, 1,0,default,#{backupid},#{contentno},'MYPAGE_COMMENT', 0)
+	</insert>
+	
+	
+	
+	<!-- 글 수정 -->
+	<update id="mypageUpdate" parameterType="MypageVO">
+	    UPDATE MY_PAGE
+		SET CONTENT = #{content}, FILEPATH = #{filepath}
+		WHERE WRITE_NO = #{writeno} AND USER_ID = #{userid}
+	</update>
+	<!-- 프로필사진 수정 -->
+	<update id="mypagePotoUpdate" parameterType="MemberVO">
+	    UPDATE MEMBER
+		SET USER_PROFILE = #{userProfile}
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<!-- 댓글 수정 -->
+	<update id="mypageCommentUpdate" parameterType="MypageCommentVO">
+	    UPDATE MYPAGE_COMMENT
+		SET CONTENT = #{content}
+		WHERE COMMENT_NO = #{commentno} AND USER_ID = #{userid}
+	</update>
+	
+	
+	
+    <!-- 글 삭제 -->
+    <delete id="mypageDelete" parameterType="MypageVO">
+    DELETE FROM MY_PAGE WHERE WRITE_NO = ${writeno}
+    </delete>
+
+	<!-- 댓글 삭제 -->
+	<delete id="mypageCommentDelete" parameterType="MypageCommentVO">
+	DELETE FROM MYPAGE_COMMENT WHERE COMMENT_NO = ${commentno}
+	</delete>
+	
+	
+	
+	<!-- 좋아요 -->
+	<select id="mypageLikeList" parameterType="mypageLikeVO" resultType="mypageLikeVO" resultMap="resultMypageLike">
+		SELECT * FROM MYPAGE_LIKE WHERE USER_ID = #{userid}
+	</select>
+	<!-- 좋아요 누를시 -->
+	<insert id="MypageLike" parameterType="mypageLikeVO">
+		INSERT INTO MYPAGE_LIKE VALUES (#{writeNo}, #{userid}, 'MYPAGE_LIKE')
+	</insert>
+	<!-- 좋아요만 검색 -->
+	<select id="MypageSelectLike" parameterType="MypageVO" resultMap="resultMypage">
+		SELECT WRITE_LIKE FROM MY_PAGE join where WRITE_NO = #{writeno}
+	</select>
+	
+	<!-- 좋아요 증가 -->
+	<update id="mypageLikeUpdate" parameterType="MypageVO">
+	    UPDATE MY_PAGE
+		SET WRITE_LIKE = #{writelike}
+		WHERE WRITE_NO = #{writeno}
+	</update>
+	<!-- 좋아요 취소시 -->
+	<delete id="MypageUnLike" parameterType="mypageLikeVO">
+		DELETE FROM MYPAGE_LIKE WHERE WRITE_NO = #{writeNo} AND USER_ID = #{userid}
+	</delete>
+	
+	<!-- 부석호 게시글 하나만 상세보기(mypage-mapper.xml) -->
+	<select id="contentsMain" parameterType="MypageVO" resultType="MypageVO" resultMap="resultMypage">
+		SELECT WRITE_NO, USER_ID, FILEPATH, CONTENT, KEYWORD, WRITE_DATE, WRITE_LIKE, BACKUP_ID, CLASSIFY, CREATE_ID, REPORT, USER_NAME, USER_PROFILE FROM MY_PAGE join MEMBER using(USER_ID)
+		WHERE WRITE_NO = #{writeno}
+	</select>
+	<!-- 부석호 게시글 하나의 댓글 상세보기(mypage-mapper.xml) -->
+	<select id="contentsMainComment" parameterType="String" resultMap="resultMypageComment">
+	SELECT COMMENT_NO, M.USER_ID, C.CONTENT, C.COMMENT_DATE, C.LEV, C.REF, C.PHOTO_PATH, C.BACKUP_ID, C.CONTENT_NO, C.CLASSIFY, C.REPORT, USER_NAME, USER_PROFILE
+    FROM MYPAGE_COMMENT C
+    JOIN MEMBER USING(USER_ID)
+    JOIN MY_PAGE M ON(C.CONTENT_NO = M.WRITE_NO)
+    WHERE C.CONTENT_NO = #{writeno}
+	</select>
+	
+	<!-- 댓글 불러오기 -->
+	<select id="selectMypageCommentList" parameterType="MypageCommentVO" resultType="MypageCommentVO" resultMap="resultMypageComment">
+		SELECT COMMENT_NO, USER_ID, USER_NAME, CONTENT, COMMENT_DATE, PHOTO_PATH, USER_PROFILE
+		FROM MYPAGE_COMMENT 
+		JOIN MEMBER USING(USER_ID)
+		where CONTENT_NO = #{writeNo}
+		ORDER BY COMMENT_NO DESC
+	</select>
+	
+	<select id="selectMypageCommentList2" parameterType="MypageCommentVO" resultType="MypageCommentVO" resultMap="resultMypageComment">
+		SELECT COMMENT_NO, USER_ID, USER_NAME, CONTENT, COMMENT_DATE, PHOTO_PATH, USER_PROFILE
+		FROM MYPAGE_COMMENT 
+		JOIN MEMBER USING(USER_ID)
+		where COMMENT_NO = #{commentno}
+		ORDER BY COMMENT_NO DESC
+	</select>
+	
+	
+	<!-- 댓글 입력 -->
+	<insert id="insertMypageComment" parameterType="MypageCommentVO">
+		INSERT INTO MYPAGE_COMMENT VALUES (BU_SEQ_MYPAGE_COMMENT.nextval,#{userid, jdbcType=VARCHAR},#{content, jdbcType=VARCHAR},sysdate, 0,0,#{photopath, jdbcType=VARCHAR},#{userid, jdbcType=VARCHAR},#{contentno},'MYPAGE_COMMENT', 0) 
+	</insert>
+	
+	<!-- 원석 부분  -->
+	<select id="getMyPage" parameterType="FireVO" resultMap="resultMypage">
+      SELECT *
+      FROM MY_PAGE
+      WHERE WRITE_NO = #{fireNo}
+   </select>
+    
+    <select id="getMyPageComment" parameterType="FireVO" resultMap="resultMypageComment">
+      SELECT *
+      FROM MYPAGE_COMMENT
+      WHERE COMMENT_NO = #{commentNo}
+   </select>
+	<!-- 원석 부분 여기까지 -->
+	
+	<!-- 임시 -->
+	<select id = "keywordCount" parameterType="map" resultType="int">
+	<if test="option==1">
+	 SELECT COUNT(*) FROM QNA WHERE TITLE LIKE #{keyword} OR CONTENT LIKE #{keyword}
+	</if>
+	
+	<if test="option==2">
+	SELECT COUNT(*) FROM QNA WHERE TITLE LIKE #{keyword}
+	</if>
+	
+	<if test="option==3">
+	SELECT COUNT(*) FROM QNA WHERE CONTENT LIKE #{keyword}
+	</if>
+	
+	</select>
+    
+
+
+</mapper>

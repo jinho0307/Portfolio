@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Qna">
+
+	<resultMap id="resultQnaContent" type="QnaContent">
+		<id property="qnaNo" column="QNA_NO" />
+		<result property="title" column="TITLE" />
+		<result property="content" column="CONTENT" />
+		<result property="filepath" column="FILEPATH" />
+		<result property="writeDate" column="WRITE_DATE" />
+		<result property="readCount" column="READ_COUNT" />
+		<result property="userId" column="USER_ID" />
+		<result property="userProfile" column="USER_PROFILE"/>
+		<result property="comCount" column="COM_COUNT"/>
+		
+	</resultMap>
+	
+	
+	<resultMap id="resultQnaComment" type="QnaComment">
+		<id property="commentNo" column="COMMENT_NO" />
+		<result property="userId" column="USER_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="writeDate" column="WRITE_DATE" />
+		<result property="lev" column="LEV" />
+		<result property="ref" column="REF" />
+		<result property="filepath" column="FILEPATH" />
+		<result property="backupId" column="BACKUP_ID" />
+		<result property="qnaNo" column="QNA_NO" />
+		<result property="classify" column="CLASSIFY" />
+		
+	</resultMap>
+	
+	<select id = "selectList" resultType="QnaContent" resultMap="resultQnaContent">
+	SELECT QNA_NO, TITLE, CONTENT, FILEPATH, WRITE_DATE, READ_COUNT, USER_ID, NVL(COM_COUNT, 0) COM_COUNT FROM QNA
+	LEFT JOIN(SELECT QNA_NO, COUNT(*) COM_COUNT FROM QNA_COMMENT GROUP BY QNA_NO)
+	USING(QNA_NO) ORDER BY 1 DESC 
+	
+	
+	</select>
+	
+	<select id = "selectQna" parameterType = "int" resultType="QnaContent" resultMap="resultQnaContent">
+	
+	SELECT QNA_NO, TITLE, CONTENT, FILEPATH, WRITE_DATE, READ_COUNT, USER_ID, USER_PROFILE FROM QNA
+	JOIN MEMBER USING(USER_ID)
+	WHERE QNA_NO = #{qNo}
+	
+	</select>
+	
+	<select id = "selectCount" resultType="int">
+	SELECT COUNT(*) FROM QNA
+	
+	</select> 
+	
+	<select id = "selectComment" parameterType="int" resultType="QnaComment" resultMap="resultQnaComment">
+	SELECT * FROM QNA_COMMENT WHERE QNA_NO = #{qNo}
+	</select>
+	
+	<select id = "keywordCount" parameterType="map" resultType="int">
+	<if test="option==1">
+	 SELECT COUNT(*) FROM QNA WHERE TITLE LIKE #{keyword} OR CONTENT LIKE #{keyword}
+	</if>
+	
+	<if test="option==2">
+	SELECT COUNT(*) FROM QNA WHERE TITLE LIKE #{keyword}
+	</if>
+	
+	<if test="option==3">
+	SELECT COUNT(*) FROM QNA WHERE CONTENT LIKE #{keyword}
+	</if>
+	
+	</select>
+	
+	
+	<select id = "searchList" parameterType="map" resultType="QnaContent" resultMap="resultQnaContent">
+	<if test="option==1">
+	 SELECT * FROM QNA WHERE TITLE LIKE #{keyword} OR CONTENT LIKE #{keyword} ORDER BY 1 DESC 
+	</if>
+	
+	<if test="option==2">
+	SELECT * FROM QNA WHERE TITLE LIKE #{keyword} ORDER BY 1 DESC 
+	</if>
+	
+	<if test="option==3">
+	SELECT * FROM QNA WHERE CONTENT LIKE #{keyword} ORDER BY 1 DESC 
+	</if>
+	
+	</select>
+	
+	
+	<insert id = "commentInsert" parameterType = "QnaComment" >
+	INSERT INTO QNA_COMMENT VALUES(NOH_SEQ_QNA_COMMENT.nextval, #{userId, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, SYSDATE, #{lev, jdbcType=NUMERIC}, 
+	#{ref, jdbcType=NUMERIC}, #{filepath, jdbcType=VARCHAR}, #{backupId, jdbcType=VARCHAR}, #{qnaNo, jdbcType=NUMERIC}, #{classify, jdbcType=VARCHAR} )
+	</insert>
+	
+	<insert id = "insertQna" parameterType = "QnaContent">
+	INSERT INTO QNA VALUES(NOH_SEQ_QNA.NEXTVAL, #{title, jdbcType=VARCHAR}, #{content, jdbcType=VARCHAR}, #{filepath, jdbcType=VARCHAR}, SYSDATE, 0, #{userId, jdbcType=VARCHAR})
+	
+	</insert>
+	
+	<update id="increaseCount" parameterType="int">
+	UPDATE QNA SET READ_COUNT= READ_COUNT+1 WHERE QNA_NO = #{qNo}
+	
+	</update>
+	
+	<update id="updateQna" parameterType="QnaContent">
+	UPDATE QNA SET TITLE = #{title, jdbcType=VARCHAR}, CONTENT = #{content, jdbcType=VARCHAR},
+	FILEPATH = #{filepath, jdbcType=VARCHAR}, WRITE_DATE = SYSDATE
+	WHERE QNA_NO = #{qnaNo}
+	
+	</update>
+	
+	<delete id="deleteCom" parameterType="map">
+	DELETE QNA_COMMENT WHERE COMMENT_NO = #{comNo} AND QNA_NO = #{qnaNo}
+	
+	</delete>
+	
+	<delete id="deleteQna" parameterType="int">
+	DELETE QNA WHERE QNA_NO = #{qnaNo}
+	</delete>
+	
+	
+	
+</mapper>

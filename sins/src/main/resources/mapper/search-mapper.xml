@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Search">
+
+	<resultMap id="resultMember" type="SMemberVO">
+		
+		<result property="userId" column="USER_ID" />
+		<result property="userName" column="USER_NAME" />
+		<result property="userProfile" column="USER_PROFILE" />
+		<result property="isFriend" column="IS_FRIEND"/>
+		<result property="address" column="ADDRESS"/>
+		
+	</resultMap>
+	
+	<resultMap id="resultChannel" type="SChannelVO">
+		
+		<result property="channelNo" column="CHANNEL_NO" />
+		<result property="channelName" column="CHANNEL_NAME" />
+		<result property="filePath" column="CHANNEL_FILEPATH" />
+		<result property="category" column="CATEGORY1"/>
+		<result property="like" column="CHANNEL_LIKE"/>
+		<result property="isFollow" column="IS_FOLLOW"/>
+		<result property="userId" column="CHANNEL_USER_ID"/>
+		<result property="info" column="CHANNEL_INFO"/>
+		
+	</resultMap>
+
+	<resultMap id="resultGroup" type="SGroupVO">
+		<result property="groupNo" column="GROUP_NO"/>
+		<result property="groupName" column="GROUP_NAME"/>
+		<result property="category" column="CATEGORY1"/>
+		<result property="filePath" column="FILEPATH"/>
+		<result property="joinNum" column="JOIN_COUNT"/>
+		<result property="isJoin" column="IS_JOIN"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="info" column="GROUP_INFO"/>
+	
+	</resultMap>
+
+	<select id="searchMember" parameterType="map" resultMap="resultMember">
+	  SELECT USER_ID, USER_NAME, USER_PROFILE, ADDRESS, IS_FRIEND FROM MEMBER
+     LEFT JOIN
+     (SELECT RESPONSE_ID USER_ID, ACCEPT_YN IS_FRIEND FROM FRIEND WHERE REQUEST_ID=#{userId}
+     UNION ALL
+     SELECT REQUEST_ID USER_ID, ACCEPT_YN IS_FRIEND FROM FRIEND WHERE RESPONSE_ID=#{userId})
+     USING(USER_ID)
+     WHERE USER_NAME LIKE #{word}
+     AND USER_ID != #{userId}
+     ORDER BY IS_FRIEND DESC
+     
+	</select>
+
+	<select id="searchChannel" parameterType="map" resultMap="resultChannel">
+	SELECT CHANNEL_NO, CHANNEL_NAME, CHANNEL_FILEPATH, CHANNEL_LIKE, CATEGORY1, DECODE(USER_ID, #{userId}, 'Y', 'N') AS IS_FOLLOW,
+	CHANNEL_USER_ID, CHANNEL_INFO 
+	FROM CHANNEL_LIST
+	LEFT JOIN CHANNEL_FOLLOWER USING(CHANNEL_NO) WHERE CHANNEL_NAME LIKE #{word}
+	ORDER BY IS_FOLLOW DESC, CHANNEL_LIKE DESC NULLS LAST
+	
+	
+	</select>	
+	
+	<select id="searchGroup" parameterType="map" resultMap="resultGroup">
+	SELECT GROUP_NO, GROUP_NAME, CATEGORY1, FILEPATH, JOIN_COUNT, DECODE(JOIN_ID, #{userId}, 'Y', 'N') IS_JOIN,
+	USER_ID, GROUP_INFO
+   FROM GROUP_LIST 
+   LEFT JOIN 
+    (SELECT GROUP_NO, USER_ID JOIN_ID FROM GROUP_MEMBER
+    WHERE GROUP_ACCEPT = 'Y'
+    AND USER_ID = #{userId})
+    USING(GROUP_NO)
+  LEFT JOIN
+    (SELECT GROUP_NO, COUNT(GROUP_NO) JOIN_COUNT FROM GROUP_MEMBER
+    WHERE GROUP_ACCEPT = 'Y'
+    GROUP BY GROUP_NO)
+    USING(GROUP_NO)
+    WHERE GROUP_NAME LIKE #{word}
+	ORDER BY IS_JOIN DESC, JOIN_COUNT DESC NULLS LAST
+	
+	
+	</select>
+	
+</mapper>
+

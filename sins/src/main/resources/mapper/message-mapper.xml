@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Message">
+	
+	<resultMap id="messagemap" type="MessageVO">
+		<id property="message_no" column="MESSAGE_NO" />
+		<result property="send_id" column="SEND_ID" />
+		<result property="receivie_id" column="RECEIVE_ID" />
+		<result property="content" column="CONTENT" />
+		<result property="message_date" column="MESSAGE_DATE" />
+		<result property="filepath" column="FILEPATH" />
+		<result property="mes_req_del" column="MES_REQ_DEL" />
+		<result property="mes_res_del" column="MES_RES_DEL" />
+		<result property="classify" column="CLASSIFY" />
+		<result property="read_check" column="READ_CHECK" />
+		<result property="user_name" column="USER_NAME" />
+		<result property="profile" column="PROFILE" />
+	</resultMap>
+	
+	<select id="readlist" resultMap="messagemap" parameterType="string">
+		select send_id,RECEIVE_ID, CONTENT,MESSAGE_DATE,FILEPATH,MES_REQ_DEL,MES_RES_DEL,CLASSIFY, READ_CHECK,MESSAGE_NO, user_name "user_name",USER_PROFILE "PROFILE"
+		    from message 
+			join member on(send_id = user_id)
+			where RECEIVE_ID = #{userid} and MES_RES_DEL = 'N' 
+			and (RECEIVE_ID, send_id) not in (select * from MESSAGESPAM where receive_id = #{userid})
+			order by message_no desc
+	</select>
+	
+	<select id="listcount" resultType="int" parameterType="string">
+		select count(*) from message
+		join member on(send_id = user_id) 
+		where RECEIVE_ID = #{userid} and MES_RES_DEL = 'N'
+		and (RECEIVE_ID, send_id) not in (select * from MESSAGESPAM where receive_id = #{userid})
+	</select>
+	
+	<select id="sendlist" resultMap="messagemap" parameterType="string">
+		select send_id,RECEIVE_ID, CONTENT,MESSAGE_DATE,FILEPATH,MES_REQ_DEL,MES_RES_DEL,CLASSIFY, READ_CHECK,MESSAGE_NO, user_name "user_name",USER_PROFILE "PROFILE"
+	        from message 
+			join member on(RECEIVE_ID = user_id)
+			where SEND_ID = #{userid} and MES_REQ_DEL = 'N' 
+			order by message_no desc
+	</select>
+	
+	<select id="sendlistcount" resultType="int" parameterType="string">
+		select count(*) from message where SEND_ID = #{userid} and MES_REQ_DEL = 'N'
+	</select>
+	
+	<select id="spaminsert" parameterType="int">
+		{call
+			jun_PRO_SPAMINSERT(#{no})
+		}
+	</select>
+	
+	<update id="resivedel" parameterType="int">
+		update message set MES_RES_DEL = 'Y' where MESSAGE_NO = #{no}
+	</update>
+	
+	<update id="senddel" parameterType="int">
+		update message set MES_REQ_DEL = 'Y' where MESSAGE_NO = #{no}
+	</update>
+	
+	<select id="seachlistcount" parameterType="MsglistVO" resultType="int">
+		select JUN_MSGSEACHLISTCOUNT(#{loginid},#{select},#{seach}) from dual
+	</select>
+	
+	<select id="sendseachlistcount" parameterType="MsglistVO" resultType="int">
+		select JUN_MSGsendSEACHLISTCOUNT(#{loginid},#{select},#{seach}) from dual
+	</select> 
+	
+	<select id="idseachlist" parameterType="MsglistVO" resultMap="messagemap">
+		select send_id,RECEIVE_ID, CONTENT,MESSAGE_DATE,FILEPATH,MES_REQ_DEL,MES_RES_DEL,CLASSIFY, READ_CHECK,MESSAGE_NO, user_name "user_name",USER_PROFILE "PROFILE"
+	        from message 
+			join member on(send_id = user_id)
+			where RECEIVE_ID = #{loginid} and MES_RES_DEL = 'N' 
+			and (RECEIVE_ID, send_id) not in (select * from MESSAGESPAM where receive_id = #{loginid})
+			and send_id like #{seach}
+			order by message_no desc
+	</select>
+	
+	<select id="nameseachlist" parameterType="MsglistVO" resultMap="messagemap">
+		select send_id,RECEIVE_ID, CONTENT,MESSAGE_DATE,FILEPATH,MES_REQ_DEL,MES_RES_DEL,CLASSIFY, READ_CHECK,MESSAGE_NO, user_name "user_name",USER_PROFILE "PROFILE"
+		    from message 
+			join member on(send_id = user_id)
+			where RECEIVE_ID = #{loginid} and MES_RES_DEL = 'N' 
+			and (RECEIVE_ID, send_id) not in (select * from MESSAGESPAM where receive_id = #{loginid})
+			and user_name like #{seach}
+			order by message_no desc
+	</select>
+	
+	<select id="contentseachlist" parameterType="MsglistVO" resultMap="messagemap">
+		select send_id,RECEIVE_ID, CONTENT,MESSAGE_DATE,FILEPATH,MES_REQ_DEL,MES_RES_DEL,CLASSIFY, READ_CHECK,MESSAGE_NO, user_name "user_name",USER_PROFILE "PROFILE"
+		    from message 
+			join member on(send_id = user_id)
+			where RECEIVE_ID = #{loginid} and MES_RES_DEL = 'N' 
+			and (RECEIVE_ID, send_id) not in (select * from MESSAGESPAM where receive_id = #{loginid})
+			and content like #{seach}
+			order by message_no desc
+	</select>
+	
+	<select id="contentsendseachlist" parameterType="MsglistVO" resultMap="messagemap">
+		select send_id,RECEIVE_ID, CONTENT,MESSAGE_DATE,FILEPATH,MES_REQ_DEL,MES_RES_DEL,CLASSIFY, READ_CHECK,MESSAGE_NO, user_name "user_name",USER_PROFILE "PROFILE"
+	       from message 
+			join member on(send_id = user_id)
+			where SEND_ID = #{loginid} and MES_RES_DEL = 'N' 
+			and content like #{seach}
+			order by message_no desc
+	</select>
+	
+	<select id="namesendseachlist" parameterType="MsglistVO" resultMap="messagemap">
+		select send_id,RECEIVE_ID, CONTENT,MESSAGE_DATE,FILEPATH,MES_REQ_DEL,MES_RES_DEL,CLASSIFY, READ_CHECK,MESSAGE_NO, user_name "user_name",USER_PROFILE "PROFILE"
+	        from message 
+			join member on(send_id = user_id)
+			where SEND_ID = #{loginid} and MES_RES_DEL = 'N' 
+			and user_name like #{seach}
+			order by message_no desc
+	</select>
+		
+	<select id="idsendseachlist" parameterType="MsglistVO" resultMap="messagemap">
+		select send_id,RECEIVE_ID, CONTENT,MESSAGE_DATE,FILEPATH,MES_REQ_DEL,MES_RES_DEL,CLASSIFY, READ_CHECK,MESSAGE_NO, user_name "user_name",USER_PROFILE "PROFILE"
+	        from message 
+			join member on(send_id = user_id)
+			where SEND_ID = #{loginid} and MES_RES_DEL = 'N' 
+			and RECEIVE_ID like #{seach}
+			order by message_no desc
+	</select>
+	<select id="selectone" parameterType="int" resultMap="messagemap">
+		select send_id,RECEIVE_ID, CONTENT,MESSAGE_DATE,FILEPATH,MES_REQ_DEL,MES_RES_DEL,CLASSIFY, READ_CHECK,MESSAGE_NO, user_name "user_name",USER_PROFILE "PROFILE"
+	        from message 
+			join member on(send_id = user_id)
+			where message_no = #{msg_no}
+	</select>
+	
+	<select id="autocomresiveid" parameterType="string" resultType="string">
+		select * from (select * from 
+			(select response_id user_id from FRIEND where request_id = #{send_id} and ACCEPT_YN = 'Y')
+			union all
+			(select request_id user_id from FRIEND where response_id = #{send_id} and ACCEPT_YN = 'Y'))
+			where user_id like #{receivie_id}
+	</select>
+	
+	<insert id="sendmsg" parameterType="MessageVO">
+		insert into message values(
+			#{send_id},#{receivie_id},#{content},sysdate,#{filepath jdbcType=VARCHAR}
+			,default, default, 'MESSAGE', default, JUN_MESSAGE_SEQ.nextval)
+	</insert>
+	
+	<update id="msgread" parameterType="int">
+		update message set READ_CHECK = 'Y' where MESSAGE_NO = #{no}
+	</update>
+	
+	<select id="spamlistcount" parameterType="string" resultType="int">
+		select count(*) from message
+		join member on(send_id = user_id) 
+		where RECEIVE_ID = #{userid} 
+		and MES_RES_DEL = 'N'
+		and (RECEIVE_ID, send_id) in (select * from MESSAGESPAM where receive_id = #{userid})
+	</select>
+	
+	
+	<select id="spamseachlistcount" parameterType="MsglistVO" resultType="int">
+		select JUN_MSGSPAMSEACHLISTCOUNT(#{loginid},#{select},#{seach}) from dual
+	</select>
+	
+	<select id="idspamseachlist" parameterType="MsglistVO" resultType="MessageVO">
+		select SEND_ID,RECEIVE_ID, CONTENT, MESSAGE_DATE, FILEPATH
+			, MES_REQ_DEL, MES_RES_DEL, CLASSIFY, READ_CHECK, MESSAGE_NO, USER_NAME,USER_PROFILE "PROFILE"
+			from message
+			join member on(send_id = user_id)
+			where RECEIVE_ID = #{loginid}
+			and MES_RES_DEL = 'N'
+			and send_id like #{seach}
+			and (RECEIVE_ID, send_id) in (select * from MESSAGESPAM where receive_id = #{loginid})	
+	</select>
+	
+	<select id="namespamseachlist" parameterType="MsglistVO" resultType="MessageVO">
+		select SEND_ID,RECEIVE_ID, CONTENT, MESSAGE_DATE, FILEPATH
+			, MES_REQ_DEL, MES_RES_DEL, CLASSIFY, READ_CHECK, MESSAGE_NO, USER_NAME,USER_PROFILE "PROFILE"
+			from message
+			join member on(send_id = user_id)
+			where RECEIVE_ID = #{loginid}
+			and MES_RES_DEL = 'N'
+			and user_name like #{seach}
+			and (RECEIVE_ID, send_id) in (select * from MESSAGESPAM where receive_id = #{loginid})
+	</select>
+	
+	<select id="contentspamseachlist" parameterType="MsglistVO" resultType="MessageVO">
+		select SEND_ID,RECEIVE_ID, CONTENT, MESSAGE_DATE, FILEPATH
+			, MES_REQ_DEL, MES_RES_DEL, CLASSIFY, READ_CHECK, MESSAGE_NO, USER_NAME,USER_PROFILE "PROFILE"
+			from message
+			join member on(send_id = user_id)
+			where RECEIVE_ID = #{loginid}
+			and MES_RES_DEL = 'N'
+			and content like #{seach}
+			and (RECEIVE_ID, send_id) in (select * from MESSAGESPAM where receive_id = #{loginid})
+	</select>
+	
+	<select id="spamseachlist" parameterType="MsglistVO" resultType="MessageVO">
+		select SEND_ID,RECEIVE_ID, CONTENT, MESSAGE_DATE, FILEPATH
+			, MES_REQ_DEL, MES_RES_DEL, CLASSIFY, READ_CHECK, MESSAGE_NO, USER_NAME,USER_PROFILE "PROFILE"
+			from message
+			join member on(send_id = user_id)
+			where RECEIVE_ID = #{loginid}
+			and MES_RES_DEL = 'N'
+			and (RECEIVE_ID, send_id) in (select * from MESSAGESPAM where receive_id = #{loginid})
+	</select>
+		
+	<select id="spamuserlistcount" parameterType="string" resultType="int">
+		select count(*) from MESSAGESPAM
+		join member on(spam_id = user_id)
+		where RECEIVE_ID = #{userId}
+	</select>
+	
+	<select id="spamuserlist" parameterType="string" resultType="MessageVO">
+		select SPAM_ID "SEND_ID", user_name from MESSAGESPAM
+		join member on(spam_id = user_id)
+		where RECEIVE_ID = #{userId}
+	</select>
+	
+	<delete id="spamremove" parameterType="MessageVO">
+		delete from messagespam
+		where RECEIVE_ID = #{send_id}
+		and SPAM_ID = #{receive_id}
+		
+	</delete>
+	
+	<select id="msglisthead" parameterType="int" resultMap="messagemap">
+		select send_id,RECEIVE_ID, CONTENT,MESSAGE_DATE,FILEPATH,MES_REQ_DEL,MES_RES_DEL,CLASSIFY, READ_CHECK,MESSAGE_NO, user_name "user_name",USER_PROFILE "PROFILE"
+	        from message 
+			join member on(send_id = user_id)
+			where message_no = #{msgno}
+	</select>
+<!-- 	<select id="selectmap" resultMap="messagemap" resultType="MessageVO" parameterType="string">
+		select * from message where RECEIVE_ID = #{userid}	
+	</select> -->
+</mapper>
