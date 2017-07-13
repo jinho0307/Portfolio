@@ -1,6 +1,6 @@
 # Portfolio
 
-Jinho Yoon, 17.07.16 updated 
+Jinho Yoon
 
 ## Project Description
 
