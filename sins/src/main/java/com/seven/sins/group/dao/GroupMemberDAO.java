@@ -32,21 +32,8 @@ public class GroupMemberDAO {
 		return sqlSession.update(NAMESPACE + "agreeGroupMember", vo);
 	}
 
-	// 멤버 grade 변경.-----------------------------------
-	public int updateGroupMember(GroupMemberVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	// 가입 거절(운영진) or 그룹 탈퇴(멤버 본인) or 회원 탈퇴(운영진)
 	public int deleteGroupMember(GroupMemberVO vo) {
 		return sqlSession.delete(NAMESPACE + "deleteGroupMember", vo);
 	}
-
-	// 그룹 회원 수/ 필요한지 보류. -----------------------------------------
-	public int countGroupMember(int groupNo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }
