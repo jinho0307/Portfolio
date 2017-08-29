@@ -25,9 +25,4 @@ public interface GroupCommentService {
 	
 	// 답글 쓰기.
 	public int insertGroupComment2(GroupCommentVO vo);
-	
-	// 답글 수정.
-	
-	// 답글 삭제.
-	
 }
