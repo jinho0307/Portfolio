@@ -24,8 +24,4 @@ public interface GroupService {
 	
 	// 신고.
 	public ArrayList<FireVO> getfireList(FireVO search);
-	
-	
-	
-	
 }
