@@ -25,20 +25,9 @@ public class GroupCommentDAO {
 		return sqlSession.insert(NAMESPACE + "insertGroupComment", vo);
 	}
 
-	public int updateGroupComment(GroupCommentVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	public int deleteGroupComment(GroupCommentVO vo) {
 		return sqlSession.update(NAMESPACE + "deleteGroupComment", vo);
 	}
-
-	public int countGroupComment(int writeNo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	
 	@SuppressWarnings("unchecked")
 	public ArrayList<GroupCommentVO> selectGroupCommentList2(GroupCommentVO vo) {
@@ -48,7 +37,4 @@ public class GroupCommentDAO {
 	public int insertGroupComment2(GroupCommentVO vo) {
 		return sqlSession.update(NAMESPACE + "insertGroupComment2", vo);
 	}
-
-	
-
 }
