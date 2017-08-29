@@ -43,11 +43,6 @@ public class GroupCommentServiceImpl implements GroupCommentService {
 		int result = groupCommentDAO.countGroupComment(writeNo);
 		return result;
 	}
-
-	
-	
-	
-	
 	
 	@Override
 	public ArrayList<GroupCommentVO> selectGroupCommentList2(GroupCommentVO vo) {
@@ -61,6 +56,4 @@ public class GroupCommentServiceImpl implements GroupCommentService {
 		int result = groupCommentDAO.insertGroupComment2(vo);
 		return result;
 	}
-
-	
 }
