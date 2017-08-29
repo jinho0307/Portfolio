@@ -106,21 +106,21 @@ public class GroupController {
 	}
 
 	// 그룹 생성.
-		@RequestMapping("insertGroup.y")
-		public String insertGroup(GroupVO vo, @RequestParam("file") MultipartFile file) throws Exception {
+	@RequestMapping("insertGroup.y")
+	public String insertGroup(GroupVO vo, @RequestParam("file") MultipartFile file) throws Exception {
 
-			if(file.isEmpty() == false){
-				String userId = vo.getUserId();
-				String filepath = fileUtils.fileInfo(userId, file);
-				vo.setFilepath(filepath);		
-			}
-			
-			System.out.println(vo);
-			
-			groupService.insertGroup(vo);
-			
-			return "forward:/selectGroupList.y";
+		if(file.isEmpty() == false){
+			String userId = vo.getUserId();
+			String filepath = fileUtils.fileInfo(userId, file);
+			vo.setFilepath(filepath);		
 		}
+
+		System.out.println(vo);
+
+		groupService.insertGroup(vo);
+
+		return "forward:/selectGroupList.y";
+	}
 	
 	// 그룹 수정
 	@RequestMapping("updateGroup.y")
@@ -213,13 +213,6 @@ public class GroupController {
 		
 		return "forward:/selectGroup.y?groupNo=" + vo.getGroupNo();
 	}
-	
-	/*@RequestMapping("reportWrite.y")
-	public @ResponseBody int reportWrite() {
-		groupWriteService.reportWrite();
-		
-		return 0;
-	}*/
 	
 	// 좋아요 ----------------------------------------------------------------------
 	@RequestMapping("groupLike.y")
