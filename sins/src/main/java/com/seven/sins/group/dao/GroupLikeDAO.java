@@ -28,8 +28,4 @@ public class GroupLikeDAO {
 	public int groupUnlike(GroupLikeVO vo) {
 		return sqlSession.delete(NAMESPACE + "groupUnlike", vo);
 	}
-
-	public int countGroup(GroupLikeVO vo) {
-		return 0;
-	}
 }
